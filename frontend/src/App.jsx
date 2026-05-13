@@ -559,9 +559,48 @@ function Dashboard() {
       </form>
 
       {status === 'idle' ? <StatePanel tone="neutral" icon={Gauge} title="Pronto para carregar" text="Informe a chave administrativa para buscar os indicadores." /> : null}
-      {status === 'loading' ? <StatePanel tone="neutral" icon={Loader2} title="Carregando dashboard" text="Estamos consolidando os dados da planilha." spinning /> : null}
+      {status === 'loading' ? <DashboardSkeleton /> : null}
       {status === 'error' ? <StatePanel tone="danger" icon={AlertCircle} title="Dashboard indisponivel" text={error} assertive /> : null}
       {status === 'ready' && summary ? <DashboardContent summary={summary} /> : null}
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="dashboard-skeleton" aria-busy="true" aria-live="polite">
+      <span className="muted" style={{ margin: 0 }}>Consolidando os dados da planilha...</span>
+      <div className="metric-grid">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div className="skeleton-card" key={`mc-${index}`}>
+            <span className="skeleton skeleton-line md" />
+            <span className="skeleton skeleton-line lg" />
+            <span className="skeleton skeleton-line sm" />
+          </div>
+        ))}
+      </div>
+      <div className="insight-grid">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div className="skeleton-panel" key={`ip-${index}`}>
+            <span className="skeleton skeleton-line md" />
+            <span className="skeleton" style={{ height: 120, width: '100%', borderRadius: 8 }} />
+          </div>
+        ))}
+      </div>
+      <div className="dashboard-grid">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div className="skeleton-panel" key={`dg-${index}`}>
+            <span className="skeleton skeleton-line md" />
+            <div className="skeleton-bars">
+              <span className="skeleton skeleton-line" />
+              <span className="skeleton skeleton-line" />
+              <span className="skeleton skeleton-line" />
+              <span className="skeleton skeleton-line" />
+              <span className="skeleton skeleton-line" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -651,26 +690,37 @@ function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
       </header>
       {items.length ? (
         <div className={variant === 'column' ? 'column-list' : 'bar-list'}>
-          {items.map((item) => (
-            <div className={variant === 'column' ? 'column-item' : 'bar-item'} key={`${title}-${item.label}`}>
-              <div className="bar-label">
-                <span>{item.label}</span>
-                <strong>{formatNumber(item.count)}</strong>
+          {items.map((item) => {
+            const total = items.reduce((sum, it) => sum + Number(it.count || 0), 0);
+            const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
+            const tooltip = `${item.label}: ${formatNumber(item.count)} (${percent}%)`;
+            return (
+              <div
+                className={variant === 'column' ? 'column-item' : 'bar-item'}
+                key={`${title}-${item.label}`}
+                title={tooltip}
+                tabIndex={0}
+                aria-label={tooltip}
+              >
+                <div className="bar-label">
+                  <span>{item.label}</span>
+                  <strong>{formatNumber(item.count)}</strong>
+                </div>
+                <div className={variant === 'column' ? 'column-track' : 'bar-track'}>
+                  <span
+                    style={
+                      variant === 'column'
+                        ? { '--bar-height': `${Math.max((item.count / max) * 100, 4)}%` }
+                        : { width: `${Math.max((item.count / max) * 100, 4)}%` }
+                    }
+                  />
+                </div>
               </div>
-              <div className={variant === 'column' ? 'column-track' : 'bar-track'}>
-                <span
-                  style={
-                    variant === 'column'
-                      ? { '--bar-height': `${Math.max((item.count / max) * 100, 4)}%` }
-                      : { width: `${Math.max((item.count / max) * 100, 4)}%` }
-                  }
-                />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
-        <p className="empty-chart">Sem dados para este indicador.</p>
+        <ChartEmptyState />
       )}
     </article>
   );
@@ -689,8 +739,15 @@ function PillPanel({ title, icon: Icon, items = [] }) {
         <div className="pill-list">
           {items.slice(0, 8).map((item) => {
             const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
+            const tooltip = `${item.label}: ${formatNumber(item.count)} (${percent}%)`;
             return (
-              <div className="pill-row" key={`${title}-${item.label}`}>
+              <div
+                className="pill-row"
+                key={`${title}-${item.label}`}
+                title={tooltip}
+                tabIndex={0}
+                aria-label={tooltip}
+              >
                 <span>{item.label}</span>
                 <strong>{percent}%</strong>
                 <div className="pill-meter">
@@ -701,7 +758,7 @@ function PillPanel({ title, icon: Icon, items = [] }) {
           })}
         </div>
       ) : (
-        <p className="empty-chart">Sem dados para este indicador.</p>
+        <ChartEmptyState />
       )}
     </article>
   );
@@ -772,15 +829,27 @@ function MosaicPanel({ title, icon: Icon, items = [] }) {
       </header>
       {items.length ? (
         <div className="mosaic-grid">
-          {items.slice(0, 8).map((item) => (
-            <div className="mosaic-tile" key={`${title}-${item.label}`} style={{ '--tile-scale': 0.64 + (item.count / max) * 0.36 }}>
-              <strong>{formatNumber(item.count)}</strong>
-              <span>{item.label}</span>
-            </div>
-          ))}
+          {items.slice(0, 8).map((item) => {
+            const total = items.reduce((sum, it) => sum + Number(it.count || 0), 0);
+            const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
+            const tooltip = `${item.label}: ${formatNumber(item.count)} (${percent}%)`;
+            return (
+              <div
+                className="mosaic-tile"
+                key={`${title}-${item.label}`}
+                style={{ '--tile-scale': 0.64 + (item.count / max) * 0.36 }}
+                title={tooltip}
+                tabIndex={0}
+                aria-label={tooltip}
+              >
+                <strong>{formatNumber(item.count)}</strong>
+                <span>{item.label}</span>
+              </div>
+            );
+          })}
         </div>
       ) : (
-        <p className="empty-chart">Sem dados para este indicador.</p>
+        <ChartEmptyState />
       )}
     </article>
   );
@@ -891,6 +960,16 @@ function LookerDonutPanel({ title, icon: Icon, items = [] }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function ChartEmptyState() {
+  return (
+    <div className="chart-empty">
+      <BarChart3 size={20} aria-hidden="true" />
+      <strong>Sem dados</strong>
+      <span>Nenhuma resposta encontrada para este indicador.</span>
+    </div>
   );
 }
 
