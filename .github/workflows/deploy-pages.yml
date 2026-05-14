@@ -38,6 +38,7 @@ jobs:
         env:
           VITE_BASE_PATH: ${{ vars.VITE_BASE_PATH || '/' }}
           VITE_APPS_SCRIPT_URL: ${{ vars.VITE_APPS_SCRIPT_URL }}
+          VITE_SECONDARY_APPS_SCRIPT_URL: ${{ vars.VITE_SECONDARY_APPS_SCRIPT_URL }}
           VITE_RECAPTCHA_SITE_KEY: ${{ vars.VITE_RECAPTCHA_SITE_KEY }}
           VITE_FORM_URL: ${{ vars.VITE_FORM_URL }}
 

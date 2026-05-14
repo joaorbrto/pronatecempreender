@@ -3,6 +3,7 @@ import {
   BarChart3,
   BookOpen,
   CheckCircle2,
+  Database,
   ExternalLink,
   Gauge,
   GraduationCap,
@@ -19,12 +20,54 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+// Variáveis expostas pelo Vite. No GitHub Pages elas vêm do workflow; localmente, do arquivo .env.
 const FORM_URL =
   import.meta.env.VITE_FORM_URL ||
   'https://docs.google.com/forms/d/e/1FAIpQLSdw12nttWOfb4chxPK_zeucc97I5Tf4wg6naV1AGBx9FwIe7g/viewform?usp=header';
 const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || '';
+const SECONDARY_APPS_SCRIPT_URL = import.meta.env.VITE_SECONDARY_APPS_SCRIPT_URL || '';
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
+const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
 
+// Textos estáticos ficam fora dos componentes para evitar recriação a cada render.
+const PAGE_COPY = {
+  home: {
+    eyebrow: 'Pronatec Empreender',
+    title: 'Portal de acompanhamento das inscrições',
+    description: 'Uma entrada única para consulta pública, indicadores de gestão e leitura territorial das ofertas.',
+  },
+  validate: {
+    eyebrow: '',
+    title: 'Consulta de interessados',
+    description: 'Informe o CPF para consultar a pesquisa de interesse.',
+  },
+  dashboard: {
+    eyebrow: 'Gestão e políticas públicas',
+    title: 'Dashboard administrativo',
+    description: 'Indicadores agregados para orientar ofertas, territórios, inclusão digital e inclusão produtiva.',
+  },
+  secondaryDashboard: {
+    eyebrow: 'Pronatec Empreender',
+    title: 'Institutos cadastrados no programa Pronatec Empreender',
+    description: 'Indicadores para que a coordenação acompanhe o andamento do programa.',
+  },
+};
+const HOME_COURSES = [
+  {
+    title: 'Negócios Inovadores Apoiados por IA',
+    text: 'Formação voltada ao uso de inteligência artificial em processos, soluções e oportunidades de negócio.',
+  },
+  {
+    title: 'Drones e Impressoras 3D',
+    text: 'Operação, manutenção, prototipagem digital, impressão 3D e aplicações com drones.',
+  },
+  {
+    title: 'App Clicks',
+    text: 'Construção rápida de aplicativos para mídias digitais, com foco em empreendedorismo digital e no-code.',
+  },
+];
+
+// Mantém uma única promessa de carregamento para evitar inserir o script do reCAPTCHA mais de uma vez.
 let recaptchaPromise;
 
 function loadRecaptcha() {
@@ -67,14 +110,14 @@ function formatCpf(value) {
 function getErrorMessage(error) {
   const messages = {
     invalid_request: 'Confira os dados e tente novamente.',
-    invalid_captcha: 'A verificacao expirou ou nao foi concluida. Resolva o captcha novamente.',
+    invalid_captcha: 'A verificação expirou ou não foi concluída. Resolva o captcha novamente.',
     request_timeout: 'A consulta demorou mais que o esperado. Tente novamente em alguns instantes.',
-    unauthorized: 'Chave administrativa invalida.',
-    server_error: 'Nao foi possivel consultar a planilha agora. Tente novamente em instantes.',
-    configuration_error: 'A consulta ainda nao foi configurada. Verifique as variaveis do projeto.',
+    unauthorized: 'Chave administrativa inválida.',
+    server_error: 'Não foi possível consultar a planilha agora. Tente novamente em instantes.',
+    configuration_error: 'A consulta ainda não foi configurada. Verifique as variáveis do projeto.',
   };
 
-  return messages[error] || 'Nao foi possivel concluir a consulta. Tente novamente.';
+  return messages[error] || 'Não foi possível concluir a consulta. Tente novamente.';
 }
 
 function CaptchaBox({ siteKey, onTokenChange, onReady, onError, resetKey }) {
@@ -115,17 +158,18 @@ function CaptchaBox({ siteKey, onTokenChange, onReady, onError, resetKey }) {
     }
   }, [resetKey, onTokenChange]);
 
-  return <div className="captcha" ref={containerRef} aria-label="Verificacao reCAPTCHA" />;
+  return <div className="captcha" ref={containerRef} aria-label="Verificação reCAPTCHA" />;
 }
 
-async function postToAppsScript(payload, timeoutMs = 30000) {
-  if (!APPS_SCRIPT_URL) throw new Error('configuration_error');
+async function postToAppsScript(payload, timeoutMs = 30000, endpoint = APPS_SCRIPT_URL) {
+  if (!endpoint) throw new Error('configuration_error');
 
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(APPS_SCRIPT_URL, {
+    // text/plain evita preflight CORS e mantém compatibilidade com Web Apps do Apps Script.
+    const response = await fetch(endpoint, {
       method: 'POST',
       redirect: 'follow',
       signal: controller.signal,
@@ -146,27 +190,10 @@ async function postToAppsScript(payload, timeoutMs = 30000) {
 
 function App() {
   const [activeView, setActiveView] = useState('home');
-  const pageCopy = {
-    home: {
-      eyebrow: 'Pronatec Empreender',
-      title: 'Portal de acompanhamento das inscricoes',
-      description: 'Uma entrada unica para consulta publica, indicadores de gestao e leitura territorial das ofertas.',
-    },
-    validate: {
-      eyebrow: '',
-      title: 'Consulta de interessados',
-      description: 'Informe o CPF para consultar a pesquisa de interesse.',
-    },
-    dashboard: {
-      eyebrow: 'Gestao e politicas publicas',
-      title: 'Dashboard administrativo',
-      description: 'Indicadores agregados para orientar oferta, territorio, inclusao digital e inclusao produtiva.',
-    },
-  };
 
   return (
     <main className="app-frame">
-      <aside className="sidebar" aria-label="Navegacao principal">
+      <aside className="sidebar" aria-label="Navegação principal">
         <div className="brand-text">
           <strong>PRONATEC</strong>
           <span>Empreender</span>
@@ -175,7 +202,7 @@ function App() {
         <nav className="side-nav">
           <button className={activeView === 'home' ? 'active' : ''} type="button" onClick={() => setActiveView('home')}>
             <Home size={19} aria-hidden="true" />
-            <span>Inicio</span>
+            <span>Início</span>
           </button>
           <button className={activeView === 'validate' ? 'active' : ''} type="button" onClick={() => setActiveView('validate')}>
             <Search size={19} aria-hidden="true" />
@@ -185,62 +212,56 @@ function App() {
             <LayoutDashboard size={19} aria-hidden="true" />
             <span>SETEC</span>
           </button>
+          <button
+            className={activeView === 'secondaryDashboard' ? 'active' : ''}
+            type="button"
+            onClick={() => setActiveView('secondaryDashboard')}
+          >
+            <Database size={19} aria-hidden="true" />
+            <span>Coordenação</span>
+          </button>
         </nav>
 
         <div className="sidebar-card">
           <span>Portal interno</span>
-          <strong>Indicadores para decisao</strong>
-          <p>Dados agregados das inscricoes, sem exposicao de registros individuais.</p>
+          <strong>Indicadores para decisão</strong>
+          <p>Dados agregados das inscrições, sem exposição de registros individuais.</p>
         </div>
       </aside>
 
       <section className="workspace">
         <header className="workspace-header">
           <div>
-            {pageCopy[activeView].eyebrow ? (
+            {PAGE_COPY[activeView].eyebrow ? (
               <div className="badge">
                 <ShieldCheck size={18} aria-hidden="true" />
-                {pageCopy[activeView].eyebrow}
+                {PAGE_COPY[activeView].eyebrow}
               </div>
             ) : null}
-            <h1>{pageCopy[activeView].title}</h1>
-            <p>{pageCopy[activeView].description}</p>
+            <h1>{PAGE_COPY[activeView].title}</h1>
+            <p>{PAGE_COPY[activeView].description}</p>
           </div>
         </header>
 
         {activeView === 'home' ? <HomePage onNavigate={setActiveView} /> : null}
         {activeView === 'validate' ? <CpfValidator /> : null}
         {activeView === 'dashboard' ? <Dashboard /> : null}
+        {activeView === 'secondaryDashboard' ? <SecondaryDashboard /> : null}
       </section>
     </main>
   );
 }
 
 function HomePage({ onNavigate }) {
-  const courses = [
-    {
-      title: 'Negocios Inovadores Apoiados por IA',
-      text: 'Formacao voltada ao uso de inteligencia artificial em processos, solucoes e oportunidades de negocio.',
-    },
-    {
-      title: 'Drones e Impressoras 3D',
-      text: 'Operacao, manutencao, prototipagem digital, impressao 3D e aplicacoes com drones.',
-    },
-    {
-      title: 'App Clicks',
-      text: 'Construcao rapida de aplicativos para midias digitais, com foco em empreendedorismo digital e no-code.',
-    },
-  ];
-
   return (
     <div className="home-page">
       <section className="home-hero panel">
         <div className="home-hero-copy">
-          <span className="section-kicker">Educacao profissional, tecnologia e inclusao produtiva</span>
-          <h2>Formacao conectada a economia digital e ao empreendedorismo.</h2>
+          <span className="section-kicker">Educação profissional, tecnologia e inclusão produtiva</span>
+          <h2>Formação conectada à economia digital e ao empreendedorismo.</h2>
           <p>
-            O Pronatec Empreender apoia ofertas de qualificacao profissional em areas estrategicas, fortalecendo a
-            gestao pedagogica, a permanencia dos estudantes e a empregabilidade.
+            O Pronatec Empreender apoia ofertas de qualificação profissional em áreas estratégicas, fortalecendo a
+            gestão pedagógica, a permanência dos estudantes e a empregabilidade.
           </p>
           <div className="home-actions">
             <button type="button" onClick={() => onNavigate('validate')}>
@@ -250,6 +271,10 @@ function HomePage({ onNavigate }) {
             <button className="secondary-action" type="button" onClick={() => onNavigate('dashboard')}>
               <LayoutDashboard size={18} aria-hidden="true" />
               Acessar SETEC
+            </button>
+            <button className="secondary-action" type="button" onClick={() => onNavigate('secondaryDashboard')}>
+              <Database size={18} aria-hidden="true" />
+              Coordenação
             </button>
           </div>
         </div>
@@ -265,9 +290,9 @@ function HomePage({ onNavigate }) {
       </section>
 
       <section className="home-stats">
-        <HomeStat value="2025" label="ciclo de lancamento" />
+        <HomeStat value="2025" label="ciclo de lançamento" />
         <HomeStat value="3" label="cursos apoiados" />
-        <HomeStat value="30" label="instituicoes contempladas" />
+        <HomeStat value="30" label="instituições contempladas" />
         <HomeStat value="6.900" label="vagas aprovadas" />
       </section>
 
@@ -278,7 +303,7 @@ function HomePage({ onNavigate }) {
             <h2>Cursos do programa</h2>
           </header>
           <div className="course-list">
-            {courses.map((course) => (
+          {HOME_COURSES.map((course) => (
               <div className="course-card" key={course.title}>
                 <strong>{course.title}</strong>
                 <p>{course.text}</p>
@@ -290,20 +315,20 @@ function HomePage({ onNavigate }) {
         <article className="home-panel panel">
           <header>
             <Gauge size={20} aria-hidden="true" />
-            <h2>Leitura para gestao publica</h2>
+            <h2>Leitura para gestão pública</h2>
           </header>
           <div className="policy-list">
             <div>
               <span>01</span>
-              <p>Mapear demanda por cursos e territorio para apoiar expansao de ofertas.</p>
+              <p>Mapear demanda por cursos e território para apoiar a expansão de ofertas.</p>
             </div>
             <div>
               <span>02</span>
-              <p>Observar inclusao digital, renda, ocupacao e perfil empreendedor dos inscritos.</p>
+              <p>Observar inclusão digital, renda, ocupação e perfil empreendedor dos inscritos.</p>
             </div>
             <div>
               <span>03</span>
-              <p>Orientar acoes para publicos vulneraveis, participacao regional e permanencia.</p>
+              <p>Orientar ações para públicos vulneráveis, participação regional e permanência.</p>
             </div>
           </div>
         </article>
@@ -314,8 +339,8 @@ function HomePage({ onNavigate }) {
           <span className="section-kicker">Comunidade</span>
           <h2>Entre na comunidade do WhatsApp</h2>
           <p>
-            A comunidade concentra avisos, comunicados e orientacoes relacionadas ao Pronatec Empreender, facilitando o
-            acompanhamento das informacoes pelos participantes.
+            A comunidade concentra avisos, comunicados e orientações relacionadas ao Pronatec Empreender, facilitando o
+            acompanhamento das informações pelos participantes.
           </p>
         </div>
         <a className="whatsapp-button" href="https://chat.whatsapp.com/BQucupAq2TNEfGKkrdkhRi" target="_blank" rel="noreferrer">
@@ -327,7 +352,7 @@ function HomePage({ onNavigate }) {
 
       <section className="source-note">
         <p>
-          Informacoes institucionais resumidas a partir do site oficial do Pronatec Empreender.
+          Informações institucionais resumidas a partir do site oficial do Pronatec Empreender.
           <a href="https://empreender.pronatec.ifce.edu.br/" target="_blank" rel="noreferrer">
             Abrir fonte
             <ExternalLink size={15} aria-hidden="true" />
@@ -357,6 +382,7 @@ function CpfValidator() {
   const [error, setError] = useState('');
 
   const digits = useMemo(() => onlyDigits(cpf), [cpf]);
+  // O envio público só é liberado quando CPF e captcha estão completos.
   const canSubmit = digits.length === 11 && Boolean(captchaToken) && status !== 'loading';
 
   function resetResult() {
@@ -437,7 +463,7 @@ function CpfValidator() {
             Consultar
           </button>
         </div>
-        <p id="cpf-help">Digite os 11 numeros do CPF. A pontuacao e aplicada automaticamente.</p>
+        <p id="cpf-help">Digite os 11 números do CPF. A pontuação é aplicada automaticamente.</p>
 
         <CaptchaBox
           siteKey={RECAPTCHA_SITE_KEY}
@@ -447,7 +473,7 @@ function CpfValidator() {
           onError={handleCaptchaError}
         />
 
-        {!captchaReady && RECAPTCHA_SITE_KEY ? <p className="muted">Carregando verificacao...</p> : null}
+        {!captchaReady && RECAPTCHA_SITE_KEY ? <p className="muted">Carregando verificação...</p> : null}
       </form>
 
       <CpfResult status={status} result={result} error={error} />
@@ -490,10 +516,10 @@ function CpfResult({ status, result, error }) {
       <section className="result-panel warning" aria-live="polite">
         <XCircle size={24} aria-hidden="true" />
         <div>
-          <h2>CPF nao encontrado</h2>
-          <p>Nao localizamos uma resposta para este CPF. Responda o formulario para registrar suas informacoes.</p>
+          <h2>CPF não encontrado</h2>
+          <p>Não localizamos uma resposta para este CPF. Responda o formulário para registrar suas informações.</p>
           <a className="link-button" href={result?.formUrl || FORM_URL} target="_blank" rel="noreferrer">
-            Abrir formulario
+            Abrir formulário
             <ExternalLink size={17} aria-hidden="true" />
           </a>
         </div>
@@ -501,7 +527,7 @@ function CpfResult({ status, result, error }) {
     );
   }
 
-  return <StatePanel tone="danger" icon={AlertCircle} title="Consulta indisponivel" text={error} assertive />;
+  return <StatePanel tone="danger" icon={AlertCircle} title="Consulta indisponível" text={error} assertive />;
 }
 
 function Dashboard() {
@@ -523,6 +549,7 @@ function Dashboard() {
     setError('');
 
     try {
+      // O Apps Script principal consolida os dados da planilha de respostas do formulário.
       const payload = await postToAppsScript({ action: 'dashboardSummary', accessKey: accessKey.trim() }, 45000);
       if (!payload.ok) {
         setError(getErrorMessage(payload.error));
@@ -560,10 +587,173 @@ function Dashboard() {
 
       {status === 'idle' ? <StatePanel tone="neutral" icon={Gauge} title="Pronto para carregar" text="Informe a chave administrativa para buscar os indicadores." /> : null}
       {status === 'loading' ? <DashboardSkeleton /> : null}
-      {status === 'error' ? <StatePanel tone="danger" icon={AlertCircle} title="Dashboard indisponivel" text={error} assertive /> : null}
+      {status === 'error' ? <StatePanel tone="danger" icon={AlertCircle} title="Dashboard indisponível" text={error} assertive /> : null}
       {status === 'ready' && summary ? <DashboardContent summary={summary} /> : null}
     </div>
   );
+}
+
+function SecondaryDashboard() {
+  const [accessKey, setAccessKey] = useState('');
+  const [status, setStatus] = useState('idle');
+  const [summary, setSummary] = useState(null);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!accessKey.trim()) {
+      setError(getErrorMessage('invalid_request'));
+      setStatus('error');
+      return;
+    }
+
+    setStatus('loading');
+    setError('');
+
+    try {
+      // Esta aba usa outro Web App porque a base de coordenação vem de uma segunda planilha.
+      const payload = await postToAppsScript(
+        {
+          action: 'secondaryDashboardSummary',
+          accessKey: accessKey.trim(),
+        },
+        45000,
+        SECONDARY_APPS_SCRIPT_URL,
+      );
+
+      if (!payload.ok) {
+        setError(getErrorMessage(payload.error));
+        setStatus('error');
+        return;
+      }
+
+      setSummary(payload.summary);
+      setStatus('ready');
+    } catch (requestError) {
+      setError(getErrorMessage(requestError?.message || 'server_error'));
+      setStatus('error');
+    }
+  }
+
+  return (
+    <div className="dashboard-layout">
+      <form className="panel admin-panel" onSubmit={handleSubmit}>
+        <label htmlFor="secondary-access-key">Chave administrativa</label>
+        <div className="input-row">
+          <input
+            id="secondary-access-key"
+            type="password"
+            autoComplete="off"
+            value={accessKey}
+            onChange={(event) => setAccessKey(event.target.value)}
+            placeholder="Digite a chave do dashboard"
+          />
+          <button type="submit" disabled={status === 'loading'}>
+            {status === 'loading' ? <Loader2 className="spin" size={18} aria-hidden="true" /> : <Database size={18} aria-hidden="true" />}
+            Carregar
+          </button>
+        </div>
+        <p>Este painel apresenta dados agregados sobre os institutos cadastrados, ajudando a coordenação a acompanhar vagas, cursos, regiões e cronograma do programa.</p>
+      </form>
+
+      {status === 'idle' ? <SecondaryDashboardSetup /> : null}
+      {status === 'loading' ? <DashboardSkeleton /> : null}
+      {status === 'error' ? <StatePanel tone="danger" icon={AlertCircle} title="Dashboard indisponível" text={error} assertive /> : null}
+      {status === 'ready' && summary ? <SecondaryDashboardContent summary={summary} /> : null}
+    </div>
+  );
+}
+
+function SecondaryDashboardSetup() {
+  return (
+    <section className="setup-panel panel">
+      <div>
+        <span className="section-kicker">Acompanhamento da coordenação</span>
+        <h2>Indicadores dos institutos cadastrados</h2>
+        <p>
+          Use este painel para acompanhar a distribuição de vagas, cursos, instituições participantes, regiões atendidas
+          e situação do cronograma informado pelos institutos.
+        </p>
+      </div>
+      <div className="setup-grid">
+        <div>
+          <Database size={20} aria-hidden="true" />
+          <strong>Fonte</strong>
+          <span>Tabela principal de institutos, campi, cursos e vagas</span>
+        </div>
+        <div>
+          <ShieldCheck size={20} aria-hidden="true" />
+          <strong>Acesso</strong>
+          <span>Consulta administrativa protegida por chave</span>
+        </div>
+        <div>
+          <BarChart3 size={20} aria-hidden="true" />
+          <strong>Indicadores</strong>
+          <span>Cards, rankings, roscas, barras e distribuições</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SecondaryDashboardContent({ summary }) {
+  const metrics = summary.metrics || [];
+  const charts = summary.charts || [];
+  // O gráfico de início das ofertas é destacado porque orienta o acompanhamento do cronograma.
+  const scheduleChart = charts.find((chart) => chart.id === 'starts-by-month');
+  const otherCharts = charts.filter((chart) => chart.id !== 'starts-by-month');
+  const totalRecords = summary.totalRecords || summary.totalResponses || 0;
+  const primaryMetric = firstItem(metrics);
+  const secondaryMetric = metrics[1];
+  const tertiaryMetric = metrics[2];
+
+  return (
+    <div className="dashboard-content">
+      <section className="metric-grid">
+        <MetricCard icon={Database} label="Registros analisados" value={totalRecords} />
+        <MetricCard icon={Gauge} label={primaryMetric?.label || 'Indicador principal'} value={primaryMetric?.value || 'A definir'} />
+        <MetricCard icon={Users} label={secondaryMetric?.label || 'Público observado'} value={secondaryMetric?.value || 'A definir'} />
+        <MetricCard icon={MapPin} label={tertiaryMetric?.label || 'Recorte territorial'} value={tertiaryMetric?.value || 'A definir'} />
+      </section>
+
+      {scheduleChart ? (
+        <section className="dashboard-feature-grid">
+          <ScheduleColumnPanel title={scheduleChart.title || 'Início das ofertas'} icon={BarChart3} items={scheduleChart.items || []} featured />
+        </section>
+      ) : null}
+
+      {otherCharts.length ? (
+        <section className="dashboard-grid">
+          {otherCharts.map((chart, index) => (
+            <GenericChartPanel chart={chart} index={index} key={chart.id || chart.title || index} />
+          ))}
+        </section>
+      ) : (
+        <StatePanel
+          tone="neutral"
+          icon={BarChart3}
+          title="Sem indicadores configurados"
+          text="A conexão respondeu, mas ainda não trouxe gráficos para esta planilha de acompanhamento."
+        />
+      )}
+    </div>
+  );
+}
+
+function GenericChartPanel({ chart, index }) {
+  const Icon = CHART_ICONS[index % CHART_ICONS.length];
+  const items = chart.items || [];
+  const type = chart.type || 'bar';
+
+  // O Apps Script informa o tipo de gráfico; este componente escolhe o visual correspondente.
+  if (chart.id === 'starts-by-month') return <ScheduleColumnPanel title={chart.title || 'Início das ofertas'} icon={Icon} items={items} />;
+  if (type === 'donut') return <LookerDonutPanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
+  if (type === 'pie') return <PiePanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
+  if (type === 'pill') return <PillPanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
+  if (type === 'mosaic') return <MosaicPanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
+
+  return <ChartPanel title={chart.title || 'Indicador'} icon={Icon} items={items} variant={type === 'column' ? 'column' : 'bar'} />;
 }
 
 function DashboardSkeleton() {
@@ -612,25 +802,24 @@ function DashboardContent({ summary }) {
   const internetShare = percentFromYes(summary.byInternetAccess, summary.totalResponses);
   const benefitShare = percentFromYes(summary.byBenefit, summary.totalResponses);
   const disabilityShare = percentFromYes(summary.byDisability, summary.totalResponses);
-
   return (
     <div className="dashboard-content">
       <section className="metric-grid">
-        <MetricCard icon={Users} label="Inscricoes analisadas" value={summary.totalResponses} />
-        <MetricCard icon={GraduationCap} label="Curso com maior demanda" value={topCourse?.label || 'Sem dados'} detail={topCourse ? `${formatNumber(topCourse.count)} inscricoes` : ''} />
-        <MetricCard icon={MapPin} label="Regiao com maior procura" value={topRegion?.label || 'Sem dados'} detail={topRegion ? `${formatNumber(topRegion.count)} inscricoes` : ''} />
-        <MetricCard icon={Gauge} label="Com negocio proprio" value={`${businessShare}%`} detail="Indicador empreendedor" />
+        <MetricCard icon={Users} label="Inscrições analisadas" value={summary.totalResponses} />
+        <MetricCard icon={GraduationCap} label="Curso com maior demanda" value={topCourse?.label || 'Sem dados'} detail={topCourse ? `${formatNumber(topCourse.count)} inscrições` : ''} />
+        <MetricCard icon={MapPin} label="Região com maior procura" value={topRegion?.label || 'Sem dados'} detail={topRegion ? `${formatNumber(topRegion.count)} inscrições` : ''} />
+        <MetricCard icon={Gauge} label="Com negócio próprio" value={`${businessShare}%`} detail="Indicador empreendedor" />
       </section>
 
       <section className="insight-grid">
-        <DonutPanel title="Acesso a internet" icon={ShieldCheck} items={summary.byInternetAccess} highlight={`${internetShare}%`} />
-        <DonutPanel title="Recebe beneficios" icon={Users} items={summary.byBenefit} highlight={`${benefitShare}%`} />
-        <DonutPanel title="Pessoa com deficiencia" icon={Users} items={summary.byDisability} highlight={`${disabilityShare}%`} />
+        <DonutPanel title="Acesso à internet" icon={ShieldCheck} items={summary.byInternetAccess} highlight={`${internetShare}%`} />
+        <DonutPanel title="Recebe benefícios" icon={Users} items={summary.byBenefit} highlight={`${benefitShare}%`} />
+        <DonutPanel title="Pessoa com deficiência" icon={Users} items={summary.byDisability} highlight={`${disabilityShare}%`} />
         <StackPanel
-          title="Inclusao produtiva"
+          title="Inclusão produtiva"
           icon={Gauge}
           groups={[
-            { label: 'Negocio proprio', items: summary.byOwnBusiness },
+            { label: 'Negócio próprio', items: summary.byOwnBusiness },
             { label: 'Possui CNPJ', items: summary.byCnpj },
             { label: 'Porte da empresa', items: summary.byCompanySize },
           ]}
@@ -639,28 +828,28 @@ function DashboardContent({ summary }) {
 
       <section className="dashboard-grid">
         <ChartPanel title="Demanda por curso" icon={GraduationCap} items={summary.byCourse} variant="bar" />
-        <LookerDonutPanel title="Participacao por regiao" icon={MapPin} items={sortRegions(summary.byRegion)} />
+        <LookerDonutPanel title="Participação por região" icon={MapPin} items={sortRegions(summary.byRegion)} />
         <ChartPanel title="Estados" icon={MapPin} items={summary.byState} variant="column" />
         <ChartPanel title="Cidades" icon={MapPin} items={summary.byCity} variant="ranking" />
-        <ChartPanel title="Faixa etaria" icon={Users} items={sortAgeRanges(summary.byAgeRange)} variant="bar" />
+        <ChartPanel title="Faixa etária" icon={Users} items={sortAgeRanges(summary.byAgeRange)} variant="bar" />
         <PillPanel title="Escolaridade" icon={GraduationCap} items={summary.byEducation} />
-        <DonutPanel title="Renda familiar" icon={Gauge} items={summary.byIncome} highlight={firstItem(summary.byIncome)?.label || 'Renda'} centerLabel="maior grupo" primaryCount={firstItem(summary.byIncome)?.count} />
-        <PiePanel title="Raca / cor" icon={Users} items={summary.byRace} />
-        <ChartPanel title="Zona de residencia" icon={MapPin} items={summary.byZone} variant="column" />
-        <MosaicPanel title="Ocupacao atual" icon={Users} items={summary.byOccupation} />
+        <LookerDonutPanel title="Renda familiar" icon={Gauge} items={summary.byIncome} />
+        <LookerDonutPanel title="Raça / cor" icon={Users} items={summary.byRace} />
+        <ChartPanel title="Zona de residência" icon={MapPin} items={summary.byZone} variant="column" />
+        <MosaicPanel title="Ocupação atual" icon={Users} items={summary.byOccupation} />
         <ChartPanel title="Como souberam do curso" icon={BarChart3} items={summary.bySource} variant="ranking" />
-        <MosaicPanel title="Interesse em outras capacitacoes" icon={GraduationCap} items={summary.byOtherTraining} />
+        <MosaicPanel title="Interesse em outras capacitações" icon={GraduationCap} items={summary.byOtherTraining} />
         <ChartPanel title="Canal de vendas/atendimento" icon={BarChart3} items={summary.bySalesChannel} variant="ranking" />
-        <ChartPanel title="Desafios do negocio" icon={Gauge} items={summary.byBusinessChallenge} variant="bar" />
+        <ChartPanel title="Desafios do negócio" icon={Gauge} items={summary.byBusinessChallenge} variant="bar" />
       </section>
 
       <section className="dashboard-grid compact">
-        <ChartPanel title="Nivel empreendedorismo" icon={Gauge} items={summary.courseReadiness?.entrepreneurship} variant="column" />
-        <ChartPanel title="Nivel IA" icon={Gauge} items={summary.courseReadiness?.ai} variant="column" />
+        <ChartPanel title="Nível em empreendedorismo" icon={Gauge} items={summary.courseReadiness?.entrepreneurship} variant="column" />
+        <ChartPanel title="Nível em IA" icon={Gauge} items={summary.courseReadiness?.ai} variant="column" />
         <ChartPanel title="Ferramentas digitais" icon={Gauge} items={summary.courseReadiness?.digitalTools} variant="column" />
-        <ChartPanel title="Experiencia com drones" icon={Gauge} items={summary.courseReadiness?.drones} variant="column" />
+        <ChartPanel title="Experiência com drones" icon={Gauge} items={summary.courseReadiness?.drones} variant="column" />
         <ChartPanel title="Apps / no-code" icon={Gauge} items={summary.courseReadiness?.apps} variant="column" />
-        <ChartPanel title="Modo de acesso a internet" icon={ShieldCheck} items={summary.byInternetMode} variant="bar" />
+        <ChartPanel title="Modo de acesso à internet" icon={ShieldCheck} items={summary.byInternetMode} variant="bar" />
       </section>
     </div>
   );
@@ -681,7 +870,9 @@ function MetricCard({ icon: Icon, label, value, detail = '', tone = 'neutral' })
 
 function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
   const max = Math.max(...items.map((item) => item.count), 1);
+  const total = sumCounts(items);
 
+  // Componente base para rankings, barras horizontais e colunas simples.
   return (
     <article className={`chart-panel ${variant}`}>
       <header>
@@ -691,9 +882,9 @@ function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
       {items.length ? (
         <div className={variant === 'column' ? 'column-list' : 'bar-list'}>
           {items.map((item) => {
-            const total = items.reduce((sum, it) => sum + Number(it.count || 0), 0);
             const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-            const tooltip = `${item.label}: ${formatNumber(item.count)} (${percent}%)`;
+            const label = displayLabel(item.label);
+            const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)`;
             return (
               <div
                 className={variant === 'column' ? 'column-item' : 'bar-item'}
@@ -703,7 +894,7 @@ function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
                 aria-label={tooltip}
               >
                 <div className="bar-label">
-                  <span>{item.label}</span>
+                  <span>{label}</span>
                   <strong>{formatNumber(item.count)}</strong>
                 </div>
                 <div className={variant === 'column' ? 'column-track' : 'bar-track'}>
@@ -726,6 +917,78 @@ function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
   );
 }
 
+function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false }) {
+  const max = Math.max(...items.map((item) => item.count), 1);
+  const total = sumCounts(items);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeItem = items[activeIndex] || items[0];
+  const activeDetails = activeItem?.details || [];
+
+  // Ao passar o mouse ou focar uma coluna, os campi daquela data aparecem abaixo do gráfico.
+  return (
+    <article className={`chart-panel column schedule-panel ${featured ? 'featured' : ''}`}>
+      <header>
+        <Icon size={18} aria-hidden="true" />
+        <h2>{title}</h2>
+      </header>
+      {items.length ? (
+        <>
+          <div className="column-list schedule-column-list">
+            {items.map((item, index) => {
+              const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
+              const label = displayLabel(item.label);
+              const detailNames = (item.details || []).map((detail) => detail.campus).filter(Boolean).slice(0, 6);
+              const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)${detailNames.length ? ` - ${detailNames.join('; ')}` : ''}`;
+
+              return (
+                <div
+                  className={`column-item ${index === activeIndex ? 'active' : ''}`}
+                  key={`${title}-${item.label}`}
+                  title={tooltip}
+                  tabIndex={0}
+                  aria-label={tooltip}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onFocus={() => setActiveIndex(index)}
+                >
+                  <div className="bar-label">
+                    <span>{label}</span>
+                    <strong>{formatNumber(item.count)}</strong>
+                  </div>
+                  <div className="column-track">
+                    <span style={{ '--bar-height': `${Math.max((item.count / max) * 100, 4)}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="schedule-details" aria-live="polite">
+            <div className="schedule-details-head">
+              <strong>{displayLabel(activeItem?.label) || 'Sem data'}</strong>
+              <span>{formatNumber(activeItem?.count)} oferta{Number(activeItem?.count || 0) === 1 ? '' : 's'}</span>
+            </div>
+            {activeDetails.length ? (
+              <ul>
+                {activeDetails.slice(0, 8).map((detail, index) => (
+                  <li key={`${activeItem.label}-${detail.campus}-${detail.course}-${index}`}>
+                    <strong>{detail.campus || 'Campus não informado'}</strong>
+                    <span>{detail.course || 'Curso não informado'}</span>
+                    {detail.institution ? <small>{detail.institution}</small> : null}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Nenhum campus informado para esta data.</p>
+            )}
+            {activeDetails.length > 8 ? <p>+ {formatNumber(activeDetails.length - 8)} outros campi nesta data.</p> : null}
+          </div>
+        </>
+      ) : (
+        <ChartEmptyState />
+      )}
+    </article>
+  );
+}
+
 function PillPanel({ title, icon: Icon, items = [] }) {
   const total = sumCounts(items);
 
@@ -739,7 +1002,8 @@ function PillPanel({ title, icon: Icon, items = [] }) {
         <div className="pill-list">
           {items.slice(0, 8).map((item) => {
             const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-            const tooltip = `${item.label}: ${formatNumber(item.count)} (${percent}%)`;
+            const label = displayLabel(item.label);
+            const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)`;
             return (
               <div
                 className="pill-row"
@@ -748,7 +1012,7 @@ function PillPanel({ title, icon: Icon, items = [] }) {
                 tabIndex={0}
                 aria-label={tooltip}
               >
-                <span>{item.label}</span>
+                <span>{label}</span>
                 <strong>{percent}%</strong>
                 <div className="pill-meter">
                   <span style={{ width: `${Math.max(percent, 3)}%` }} />
@@ -784,7 +1048,7 @@ function DonutPanel({ title, icon: Icon, items = [], highlight, centerLabel = 'S
         <div className="donut-legend">
           {(items || []).slice(0, 4).map((item) => (
             <div key={`${title}-${item.label}`}>
-              <span>{item.label}</span>
+              <span>{displayLabel(item.label)}</span>
               <strong>{formatNumber(item.count)}</strong>
             </div>
           ))}
@@ -805,7 +1069,7 @@ function StackPanel({ title, icon: Icon, groups }) {
         {groups.map((group) => (
           <div className="stack-row" key={group.label}>
             <div className="bar-label">
-              <span>{group.label}</span>
+              <span>{displayLabel(group.label)}</span>
               <strong>{percentFromYes(group.items)}%</strong>
             </div>
             <div className="stack-track">
@@ -820,6 +1084,7 @@ function StackPanel({ title, icon: Icon, groups }) {
 
 function MosaicPanel({ title, icon: Icon, items = [] }) {
   const max = Math.max(...items.map((item) => item.count), 1);
+  const total = sumCounts(items);
 
   return (
     <article className="chart-panel mosaic-panel">
@@ -830,9 +1095,9 @@ function MosaicPanel({ title, icon: Icon, items = [] }) {
       {items.length ? (
         <div className="mosaic-grid">
           {items.slice(0, 8).map((item) => {
-            const total = items.reduce((sum, it) => sum + Number(it.count || 0), 0);
             const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-            const tooltip = `${item.label}: ${formatNumber(item.count)} (${percent}%)`;
+            const label = displayLabel(item.label);
+            const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)`;
             return (
               <div
                 className="mosaic-tile"
@@ -843,7 +1108,7 @@ function MosaicPanel({ title, icon: Icon, items = [] }) {
                 aria-label={tooltip}
               >
                 <strong>{formatNumber(item.count)}</strong>
-                <span>{item.label}</span>
+                <span>{label}</span>
               </div>
             );
           })}
@@ -879,7 +1144,7 @@ function PiePanel({ title, icon: Icon, items = [] }) {
           {slices.map((slice) => (
             <div key={`${title}-${slice.label}`}>
               <span className="legend-dot" style={{ '--legend-color': slice.color }} />
-              <span>{slice.label}</span>
+              <span>{displayLabel(slice.label)}</span>
               <strong>{slice.percent}%</strong>
             </div>
           ))}
@@ -907,7 +1172,9 @@ function LookerDonutPanel({ title, icon: Icon, items = [] }) {
     };
   });
   const activeSlice = slices[activeIndex] || slices[0];
+  const activeLabel = compactCenterLabel(activeSlice?.label);
 
+  // Rosca interativa no estilo Looker Studio: legenda e fatias controlam o percentual central.
   return (
     <article className="chart-panel looker-donut-panel">
       <header>
@@ -932,14 +1199,14 @@ function LookerDonutPanel({ title, icon: Icon, items = [] }) {
               onMouseEnter={() => setActiveIndex(index)}
               onFocus={() => setActiveIndex(index)}
             >
-              <title>{`${slice.label}: ${slice.percent}% (${formatNumber(slice.count)})`}</title>
+              <title>{`${displayLabel(slice.label)}: ${slice.percent}% (${formatNumber(slice.count)})`}</title>
             </circle>
           ))}
           <text className="donut-center-value" x="110" y="104" textAnchor="middle">
             {activeSlice ? `${activeSlice.percent}%` : '0%'}
           </text>
           <text className="donut-center-label" x="110" y="130" textAnchor="middle">
-            {activeSlice?.label || 'Sem dados'}
+            {activeLabel || 'Sem dados'}
           </text>
         </svg>
         <div className="looker-legend">
@@ -952,7 +1219,7 @@ function LookerDonutPanel({ title, icon: Icon, items = [] }) {
               tabIndex={0}
             >
               <span className="legend-dot" style={{ '--legend-color': slice.color }} />
-              <span>{slice.label}</span>
+              <span>{displayLabel(slice.label)}</span>
               <strong>{formatNumber(slice.count)}</strong>
               <small>{slice.percent}%</small>
             </div>
@@ -989,6 +1256,28 @@ function formatNumber(value) {
   return new Intl.NumberFormat('pt-BR').format(Number(value || 0));
 }
 
+function displayLabel(value) {
+  const text = String(value || '').trim();
+  const normalized = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  // Corrige rótulos comuns vindos sem acento ou como fallback dos Apps Scripts.
+  const replacements = {
+    'nao informado': 'Não informado',
+    'nao identificada': 'Não identificada',
+    'nao identificado': 'Não identificado',
+    'ate 17': 'Até 17',
+    sim: 'Sim',
+    nao: 'Não',
+  };
+
+  return replacements[normalized] || text;
+}
+
+function compactCenterLabel(value) {
+  const label = displayLabel(value);
+  if (label.length <= 18) return label;
+  return `${label.slice(0, 16).trim()}...`;
+}
+
 function firstItem(items = []) {
   return items.length ? items[0] : null;
 }
@@ -1011,7 +1300,8 @@ function percentFromYes(items = [], fallbackTotal) {
 }
 
 function sortAgeRanges(items = []) {
-  const order = ['Ate 17', '18 a 24', '25 a 34', '35 a 44', '45 a 59', '60+', 'Nao informado'];
+  // Mantém a leitura etária em ordem lógica, mesmo quando a API retorna por volume.
+  const order = ['Até 17', 'Ate 17', '18 a 24', '25 a 34', '35 a 44', '45 a 59', '60+', 'Não informado', 'Nao informado'];
   return [...items].sort((a, b) => {
     const aIndex = order.indexOf(a.label);
     const bIndex = order.indexOf(b.label);
@@ -1020,7 +1310,8 @@ function sortAgeRanges(items = []) {
 }
 
 function sortRegions(items = []) {
-  const order = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Nao informado', 'Nao identificado'];
+  // Mantém as regiões brasileiras em uma ordem estável para comparação visual.
+  const order = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Não informado', 'Nao informado', 'Não identificado', 'Nao identificado'];
   return [...items].sort((a, b) => {
     const aIndex = order.indexOf(a.label);
     const bIndex = order.indexOf(b.label);
