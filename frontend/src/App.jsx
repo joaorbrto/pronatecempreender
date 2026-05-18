@@ -20,52 +20,18 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-// Variáveis expostas pelo Vite. No GitHub Pages elas vêm do workflow; localmente, do arquivo .env.
-const FORM_URL =
-  import.meta.env.VITE_FORM_URL ||
-  'https://docs.google.com/forms/d/e/1FAIpQLSdw12nttWOfb4chxPK_zeucc97I5Tf4wg6naV1AGBx9FwIe7g/viewform?usp=header';
-const APPS_SCRIPT_URL = import.meta.env.VITE_APPS_SCRIPT_URL || '';
-const SECONDARY_APPS_SCRIPT_URL = import.meta.env.VITE_SECONDARY_APPS_SCRIPT_URL || '';
-const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
-const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
+import {
+  APPS_SCRIPT_URL,
+  FORM_URL,
+  RECAPTCHA_SITE_KEY,
+  SECONDARY_APPS_SCRIPT_URL,
+} from './config/env';
 
-// Textos estáticos ficam fora dos componentes para evitar recriação a cada render.
-const PAGE_COPY = {
-  home: {
-    eyebrow: 'Pronatec Empreender',
-    title: 'Portal de acompanhamento das inscrições',
-    description: 'Uma entrada única para consulta pública, indicadores de gestão e leitura territorial das ofertas.',
-  },
-  validate: {
-    eyebrow: '',
-    title: 'Consulta de interessados',
-    description: 'Informe o CPF para consultar a pesquisa de interesse.',
-  },
-  dashboard: {
-    eyebrow: 'Gestão e políticas públicas',
-    title: 'Dashboard administrativo',
-    description: 'Indicadores agregados para orientar ofertas, territórios, inclusão digital e inclusão produtiva.',
-  },
-  secondaryDashboard: {
-    eyebrow: 'Pronatec Empreender',
-    title: 'Institutos cadastrados no programa Pronatec Empreender',
-    description: 'Indicadores para que a coordenação acompanhe o andamento do programa.',
-  },
-};
-const HOME_COURSES = [
-  {
-    title: 'Negócios Inovadores Apoiados por IA',
-    text: 'Formação voltada ao uso de inteligência artificial em processos, soluções e oportunidades de negócio.',
-  },
-  {
-    title: 'Drones e Impressoras 3D',
-    text: 'Operação, manutenção, prototipagem digital, impressão 3D e aplicações com drones.',
-  },
-  {
-    title: 'App Clicks',
-    text: 'Construção rápida de aplicativos para mídias digitais, com foco em empreendedorismo digital e no-code.',
-  },
-];
+import { HOME_COURSES } from './data/homeCourses';
+import { PAGE_COPY } from './data/pageCopy';
+
+
+const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
 
 // Mantém uma única promessa de carregamento para evitar inserir o script do reCAPTCHA mais de uma vez.
 let recaptchaPromise;
