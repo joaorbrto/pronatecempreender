@@ -44,6 +44,11 @@ import {
   sumCounts,
 } from './utils/chartUtils';
 
+import { DashboardSkeleton } from './components/dashboard/DashboardSkeleton';
+import { ChartEmptyState } from './components/feedback/ChartEmptyState';
+import { StatePanel } from './components/feedback/StatePanel';
+import { MetricCard } from './components/ui/MetricCard';
+
 
 const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
 
@@ -658,45 +663,6 @@ function GenericChartPanel({ chart, index }) {
   return <ChartPanel title={chart.title || 'Indicador'} icon={Icon} items={items} variant={type === 'column' ? 'column' : 'bar'} />;
 }
 
-function DashboardSkeleton() {
-  return (
-    <div className="dashboard-skeleton" aria-busy="true" aria-live="polite">
-      <span className="muted" style={{ margin: 0 }}>Consolidando os dados da planilha...</span>
-      <div className="metric-grid">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div className="skeleton-card" key={`mc-${index}`}>
-            <span className="skeleton skeleton-line md" />
-            <span className="skeleton skeleton-line lg" />
-            <span className="skeleton skeleton-line sm" />
-          </div>
-        ))}
-      </div>
-      <div className="insight-grid">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div className="skeleton-panel" key={`ip-${index}`}>
-            <span className="skeleton skeleton-line md" />
-            <span className="skeleton" style={{ height: 120, width: '100%', borderRadius: 8 }} />
-          </div>
-        ))}
-      </div>
-      <div className="dashboard-grid">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div className="skeleton-panel" key={`dg-${index}`}>
-            <span className="skeleton skeleton-line md" />
-            <div className="skeleton-bars">
-              <span className="skeleton skeleton-line" />
-              <span className="skeleton skeleton-line" />
-              <span className="skeleton skeleton-line" />
-              <span className="skeleton skeleton-line" />
-              <span className="skeleton skeleton-line" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function DashboardContent({ summary }) {
   const topCourse = firstItem(summary.byCourse);
   const topRegion = firstItem(summary.byRegion);
@@ -754,19 +720,6 @@ function DashboardContent({ summary }) {
         <ChartPanel title="Modo de acesso à internet" icon={ShieldCheck} items={summary.byInternetMode} variant="bar" />
       </section>
     </div>
-  );
-}
-
-function MetricCard({ icon: Icon, label, value, detail = '', tone = 'neutral' }) {
-  return (
-    <article className={`metric-card ${tone}`}>
-      <Icon size={22} aria-hidden="true" />
-      <div>
-        <span>{label}</span>
-        <strong>{typeof value === 'number' ? formatNumber(value) : value}</strong>
-        {detail ? <small>{detail}</small> : null}
-      </div>
-    </article>
   );
 }
 
@@ -1129,28 +1082,6 @@ function LookerDonutPanel({ title, icon: Icon, items = [] }) {
         </div>
       </div>
     </article>
-  );
-}
-
-function ChartEmptyState() {
-  return (
-    <div className="chart-empty">
-      <BarChart3 size={20} aria-hidden="true" />
-      <strong>Sem dados</strong>
-      <span>Nenhuma resposta encontrada para este indicador.</span>
-    </div>
-  );
-}
-
-function StatePanel({ tone, icon: Icon, title, text, spinning = false, assertive = false }) {
-  return (
-    <section className={`result-panel ${tone}`} aria-live={assertive ? 'assertive' : 'polite'}>
-      <Icon className={spinning ? 'spin' : ''} size={24} aria-hidden="true" />
-      <div>
-        <h2>{title}</h2>
-        <p>{text}</p>
-      </div>
-    </section>
   );
 }
 
