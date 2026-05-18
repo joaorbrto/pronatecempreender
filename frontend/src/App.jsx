@@ -29,32 +29,11 @@ import {
 
 import { HOME_COURSES } from './data/homeCourses';
 import { PAGE_COPY } from './data/pageCopy';
+import { postToAppsScript } from './services/appsScriptClient';
+import { loadRecaptcha } from './services/recaptchaService';
 
 
 const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
-
-// Mantém uma única promessa de carregamento para evitar inserir o script do reCAPTCHA mais de uma vez.
-let recaptchaPromise;
-
-function loadRecaptcha() {
-  if (window.grecaptcha?.render) return Promise.resolve(window.grecaptcha);
-  if (recaptchaPromise) return recaptchaPromise;
-
-  recaptchaPromise = new Promise((resolve, reject) => {
-    window.__cpfValidatorRecaptchaLoaded = () => resolve(window.grecaptcha);
-    if (document.querySelector('script[data-recaptcha="cpf-validator"]')) return;
-
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js?onload=__cpfValidatorRecaptchaLoaded&render=explicit&hl=pt-BR';
-    script.async = true;
-    script.defer = true;
-    script.dataset.recaptcha = 'cpf-validator';
-    script.onerror = () => reject(new Error('recaptcha_load_failed'));
-    document.head.appendChild(script);
-  });
-
-  return recaptchaPromise;
-}
 
 function onlyDigits(value) {
   return value.replace(/\D/g, '').slice(0, 11);
@@ -127,32 +106,7 @@ function CaptchaBox({ siteKey, onTokenChange, onReady, onError, resetKey }) {
   return <div className="captcha" ref={containerRef} aria-label="Verificação reCAPTCHA" />;
 }
 
-async function postToAppsScript(payload, timeoutMs = 30000, endpoint = APPS_SCRIPT_URL) {
-  if (!endpoint) throw new Error('configuration_error');
 
-  const controller = new AbortController();
-  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    // text/plain evita preflight CORS e mantém compatibilidade com Web Apps do Apps Script.
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        'Content-Type': 'text/plain;charset=utf-8',
-      },
-      body: JSON.stringify(payload),
-    });
-
-    return JSON.parse(await response.text());
-  } catch (error) {
-    if (error?.name === 'AbortError') throw new Error('request_timeout');
-    throw error;
-  } finally {
-    window.clearTimeout(timeoutId);
-  }
-}
 
 function App() {
   const [activeView, setActiveView] = useState('home');
