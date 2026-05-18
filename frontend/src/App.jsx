@@ -32,38 +32,20 @@ import { PAGE_COPY } from './data/pageCopy';
 import { postToAppsScript } from './services/appsScriptClient';
 import { loadRecaptcha } from './services/recaptchaService';
 
+import { formatCpf, onlyDigits } from './utils/cpf';
+import { getErrorMessage } from './utils/errorMessages';
+import { compactCenterLabel, displayLabel, formatNumber } from './utils/formatters';
+import {
+  countYes,
+  firstItem,
+  percentFromYes,
+  sortAgeRanges,
+  sortRegions,
+  sumCounts,
+} from './utils/chartUtils';
+
 
 const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
-
-function onlyDigits(value) {
-  return value.replace(/\D/g, '').slice(0, 11);
-}
-
-function formatCpf(value) {
-  const digits = onlyDigits(value);
-  const part1 = digits.slice(0, 3);
-  const part2 = digits.slice(3, 6);
-  const part3 = digits.slice(6, 9);
-  const part4 = digits.slice(9, 11);
-
-  if (digits.length > 9) return `${part1}.${part2}.${part3}-${part4}`;
-  if (digits.length > 6) return `${part1}.${part2}.${part3}`;
-  if (digits.length > 3) return `${part1}.${part2}`;
-  return part1;
-}
-
-function getErrorMessage(error) {
-  const messages = {
-    invalid_request: 'Confira os dados e tente novamente.',
-    invalid_captcha: 'A verificação expirou ou não foi concluída. Resolva o captcha novamente.',
-    request_timeout: 'A consulta demorou mais que o esperado. Tente novamente em alguns instantes.',
-    unauthorized: 'Chave administrativa inválida.',
-    server_error: 'Não foi possível consultar a planilha agora. Tente novamente em instantes.',
-    configuration_error: 'A consulta ainda não foi configurada. Verifique as variáveis do projeto.',
-  };
-
-  return messages[error] || 'Não foi possível concluir a consulta. Tente novamente.';
-}
 
 function CaptchaBox({ siteKey, onTokenChange, onReady, onError, resetKey }) {
   const containerRef = useRef(null);
@@ -1170,73 +1152,6 @@ function StatePanel({ tone, icon: Icon, title, text, spinning = false, assertive
       </div>
     </section>
   );
-}
-
-function formatNumber(value) {
-  return new Intl.NumberFormat('pt-BR').format(Number(value || 0));
-}
-
-function displayLabel(value) {
-  const text = String(value || '').trim();
-  const normalized = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  // Corrige rótulos comuns vindos sem acento ou como fallback dos Apps Scripts.
-  const replacements = {
-    'nao informado': 'Não informado',
-    'nao identificada': 'Não identificada',
-    'nao identificado': 'Não identificado',
-    'ate 17': 'Até 17',
-    sim: 'Sim',
-    nao: 'Não',
-  };
-
-  return replacements[normalized] || text;
-}
-
-function compactCenterLabel(value) {
-  const label = displayLabel(value);
-  if (label.length <= 18) return label;
-  return `${label.slice(0, 16).trim()}...`;
-}
-
-function firstItem(items = []) {
-  return items.length ? items[0] : null;
-}
-
-function sumCounts(items = []) {
-  return items.reduce((total, item) => total + Number(item.count || 0), 0);
-}
-
-function countYes(items = []) {
-  return items.reduce((total, item) => {
-    const label = String(item.label || '').toLowerCase();
-    return label.includes('sim') ? total + Number(item.count || 0) : total;
-  }, 0);
-}
-
-function percentFromYes(items = [], fallbackTotal) {
-  const total = fallbackTotal || sumCounts(items);
-  if (!total) return 0;
-  return Math.round((countYes(items) / total) * 100);
-}
-
-function sortAgeRanges(items = []) {
-  // Mantém a leitura etária em ordem lógica, mesmo quando a API retorna por volume.
-  const order = ['Até 17', 'Ate 17', '18 a 24', '25 a 34', '35 a 44', '45 a 59', '60+', 'Não informado', 'Nao informado'];
-  return [...items].sort((a, b) => {
-    const aIndex = order.indexOf(a.label);
-    const bIndex = order.indexOf(b.label);
-    return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
-  });
-}
-
-function sortRegions(items = []) {
-  // Mantém as regiões brasileiras em uma ordem estável para comparação visual.
-  const order = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sudeste', 'Sul', 'Não informado', 'Nao informado', 'Não identificado', 'Nao identificado'];
-  return [...items].sort((a, b) => {
-    const aIndex = order.indexOf(a.label);
-    const bIndex = order.indexOf(b.label);
-    return (aIndex === -1 ? 99 : aIndex) - (bIndex === -1 ? 99 : bIndex);
-  });
 }
 
 export default App;
