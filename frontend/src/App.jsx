@@ -35,19 +35,19 @@ import { loadRecaptcha } from './services/recaptchaService';
 import { formatCpf, onlyDigits } from './utils/cpf';
 import { getErrorMessage } from './utils/errorMessages';
 import { compactCenterLabel, displayLabel, formatNumber } from './utils/formatters';
-import {
-  countYes,
-  firstItem,
-  percentFromYes,
-  sortAgeRanges,
-  sortRegions,
-  sumCounts,
-} from './utils/chartUtils';
+import { firstItem, percentFromYes, sortAgeRanges, sortRegions, sumCounts } from './utils/chartUtils';
 
 import { DashboardSkeleton } from './components/dashboard/DashboardSkeleton';
 import { ChartEmptyState } from './components/feedback/ChartEmptyState';
 import { StatePanel } from './components/feedback/StatePanel';
 import { MetricCard } from './components/ui/MetricCard';
+
+import { ChartPanel } from './components/charts/ChartPanel';
+import { DonutPanel } from './components/charts/DonutPanel';
+import { MosaicPanel } from './components/charts/MosaicPanel';
+import { PiePanel } from './components/charts/PiePanel';
+import { PillPanel } from './components/charts/PillPanel';
+import { StackPanel } from './components/charts/StackPanel';
 
 
 const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
@@ -723,55 +723,6 @@ function DashboardContent({ summary }) {
   );
 }
 
-function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
-  const max = Math.max(...items.map((item) => item.count), 1);
-  const total = sumCounts(items);
-
-  // Componente base para rankings, barras horizontais e colunas simples.
-  return (
-    <article className={`chart-panel ${variant}`}>
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      {items.length ? (
-        <div className={variant === 'column' ? 'column-list' : 'bar-list'}>
-          {items.map((item) => {
-            const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-            const label = displayLabel(item.label);
-            const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)`;
-            return (
-              <div
-                className={variant === 'column' ? 'column-item' : 'bar-item'}
-                key={`${title}-${item.label}`}
-                title={tooltip}
-                tabIndex={0}
-                aria-label={tooltip}
-              >
-                <div className="bar-label">
-                  <span>{label}</span>
-                  <strong>{formatNumber(item.count)}</strong>
-                </div>
-                <div className={variant === 'column' ? 'column-track' : 'bar-track'}>
-                  <span
-                    style={
-                      variant === 'column'
-                        ? { '--bar-height': `${Math.max((item.count / max) * 100, 4)}%` }
-                        : { width: `${Math.max((item.count / max) * 100, 4)}%` }
-                    }
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <ChartEmptyState />
-      )}
-    </article>
-  );
-}
-
 function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false }) {
   const max = Math.max(...items.map((item) => item.count), 1);
   const total = sumCounts(items);
@@ -840,171 +791,6 @@ function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false }
       ) : (
         <ChartEmptyState />
       )}
-    </article>
-  );
-}
-
-function PillPanel({ title, icon: Icon, items = [] }) {
-  const total = sumCounts(items);
-
-  return (
-    <article className="chart-panel pill-panel">
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      {items.length ? (
-        <div className="pill-list">
-          {items.slice(0, 8).map((item) => {
-            const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-            const label = displayLabel(item.label);
-            const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)`;
-            return (
-              <div
-                className="pill-row"
-                key={`${title}-${item.label}`}
-                title={tooltip}
-                tabIndex={0}
-                aria-label={tooltip}
-              >
-                <span>{label}</span>
-                <strong>{percent}%</strong>
-                <div className="pill-meter">
-                  <span style={{ width: `${Math.max(percent, 3)}%` }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <ChartEmptyState />
-      )}
-    </article>
-  );
-}
-
-function DonutPanel({ title, icon: Icon, items = [], highlight, centerLabel = 'Sim', primaryCount }) {
-  const yes = countYes(items);
-  const total = sumCounts(items);
-  const currentPrimaryCount = Number(primaryCount || yes || items[0]?.count || 0);
-  const percent = total ? Math.round((currentPrimaryCount / total) * 100) : 0;
-
-  return (
-    <article className="chart-panel donut-panel">
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      <div className="donut-wrap">
-        <div className="donut" style={{ '--percent': `${percent}%` }}>
-          <strong>{highlight || `${percent}%`}</strong>
-          <span>{centerLabel}</span>
-        </div>
-        <div className="donut-legend">
-          {(items || []).slice(0, 4).map((item) => (
-            <div key={`${title}-${item.label}`}>
-              <span>{displayLabel(item.label)}</span>
-              <strong>{formatNumber(item.count)}</strong>
-            </div>
-          ))}
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function StackPanel({ title, icon: Icon, groups }) {
-  return (
-    <article className="chart-panel stack-panel">
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      <div className="stack-list">
-        {groups.map((group) => (
-          <div className="stack-row" key={group.label}>
-            <div className="bar-label">
-              <span>{displayLabel(group.label)}</span>
-              <strong>{percentFromYes(group.items)}%</strong>
-            </div>
-            <div className="stack-track">
-              <span style={{ width: `${percentFromYes(group.items)}%` }} />
-            </div>
-          </div>
-        ))}
-      </div>
-    </article>
-  );
-}
-
-function MosaicPanel({ title, icon: Icon, items = [] }) {
-  const max = Math.max(...items.map((item) => item.count), 1);
-  const total = sumCounts(items);
-
-  return (
-    <article className="chart-panel mosaic-panel">
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      {items.length ? (
-        <div className="mosaic-grid">
-          {items.slice(0, 8).map((item) => {
-            const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-            const label = displayLabel(item.label);
-            const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)`;
-            return (
-              <div
-                className="mosaic-tile"
-                key={`${title}-${item.label}`}
-                style={{ '--tile-scale': 0.64 + (item.count / max) * 0.36 }}
-                title={tooltip}
-                tabIndex={0}
-                aria-label={tooltip}
-              >
-                <strong>{formatNumber(item.count)}</strong>
-                <span>{label}</span>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <ChartEmptyState />
-      )}
-    </article>
-  );
-}
-
-function PiePanel({ title, icon: Icon, items = [] }) {
-  const total = sumCounts(items);
-  const colors = ['#1e6b46', '#93c94d', '#2a6f9f', '#b82543', '#c77b13', '#7d5bc2', '#c8dfb0'];
-  let cursor = 0;
-  const slices = items.slice(0, 7).map((item, index) => {
-    const percent = total ? (Number(item.count || 0) / total) * 100 : 0;
-    const start = cursor;
-    cursor += percent;
-    return { ...item, percent: Math.round(percent), color: colors[index % colors.length], start, end: cursor };
-  });
-  const gradient = slices.length ? slices.map((slice) => `${slice.color} ${slice.start}% ${slice.end}%`).join(', ') : '#e3ebdf 0 100%';
-
-  return (
-    <article className="chart-panel compact-pie-panel">
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      <div className="compact-pie-layout">
-        <div className="compact-pie" style={{ '--pie-gradient': gradient }} />
-        <div className="compact-pie-legend">
-          {slices.map((slice) => (
-            <div key={`${title}-${slice.label}`}>
-              <span className="legend-dot" style={{ '--legend-color': slice.color }} />
-              <span>{displayLabel(slice.label)}</span>
-              <strong>{slice.percent}%</strong>
-            </div>
-          ))}
-        </div>
-      </div>
     </article>
   );
 }
