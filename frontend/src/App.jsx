@@ -1,18 +1,13 @@
 import {
   AlertCircle,
   BarChart3,
-  BookOpen,
   CheckCircle2,
   Database,
   ExternalLink,
   Gauge,
   GraduationCap,
-  Home,
-  LayoutDashboard,
   Loader2,
   MapPin,
-  MessageCircle,
-  Rocket,
   Search,
   ShieldCheck,
   Users,
@@ -27,8 +22,8 @@ import {
   SECONDARY_APPS_SCRIPT_URL,
 } from './config/env';
 
-import { HOME_COURSES } from './data/homeCourses';
-import { PAGE_COPY } from './data/pageCopy';
+import { AppShell } from './components/layout/AppShell';
+import { HomePage } from './features/home/HomePage';
 import { postToAppsScript } from './services/appsScriptClient';
 import { loadRecaptcha } from './services/recaptchaService';
 
@@ -93,189 +88,16 @@ function CaptchaBox({ siteKey, onTokenChange, onReady, onError, resetKey }) {
   return <div className="captcha" ref={containerRef} aria-label="Verificação reCAPTCHA" />;
 }
 
-
-
 function App() {
   const [activeView, setActiveView] = useState('home');
 
   return (
-    <main className="app-frame">
-      <aside className="sidebar" aria-label="Navegação principal">
-        <div className="brand-text">
-          <strong>PRONATEC</strong>
-          <span>Empreender</span>
-        </div>
-
-        <nav className="side-nav">
-          <button className={activeView === 'home' ? 'active' : ''} type="button" onClick={() => setActiveView('home')}>
-            <Home size={19} aria-hidden="true" />
-            <span>Início</span>
-          </button>
-          <button className={activeView === 'validate' ? 'active' : ''} type="button" onClick={() => setActiveView('validate')}>
-            <Search size={19} aria-hidden="true" />
-            <span>Consulta de Interessados</span>
-          </button>
-          <button className={activeView === 'dashboard' ? 'active' : ''} type="button" onClick={() => setActiveView('dashboard')}>
-            <LayoutDashboard size={19} aria-hidden="true" />
-            <span>SETEC</span>
-          </button>
-          <button
-            className={activeView === 'secondaryDashboard' ? 'active' : ''}
-            type="button"
-            onClick={() => setActiveView('secondaryDashboard')}
-          >
-            <Database size={19} aria-hidden="true" />
-            <span>Coordenação</span>
-          </button>
-        </nav>
-
-        <div className="sidebar-card">
-          <span>Portal interno</span>
-          <strong>Indicadores para decisão</strong>
-          <p>Dados agregados das inscrições, sem exposição de registros individuais.</p>
-        </div>
-      </aside>
-
-      <section className="workspace">
-        <header className="workspace-header">
-          <div>
-            {PAGE_COPY[activeView].eyebrow ? (
-              <div className="badge">
-                <ShieldCheck size={18} aria-hidden="true" />
-                {PAGE_COPY[activeView].eyebrow}
-              </div>
-            ) : null}
-            <h1>{PAGE_COPY[activeView].title}</h1>
-            <p>{PAGE_COPY[activeView].description}</p>
-          </div>
-        </header>
-
-        {activeView === 'home' ? <HomePage onNavigate={setActiveView} /> : null}
-        {activeView === 'validate' ? <CpfValidator /> : null}
-        {activeView === 'dashboard' ? <Dashboard /> : null}
-        {activeView === 'secondaryDashboard' ? <SecondaryDashboard /> : null}
-      </section>
-    </main>
-  );
-}
-
-function HomePage({ onNavigate }) {
-  return (
-    <div className="home-page">
-      <section className="home-hero panel">
-        <div className="home-hero-copy">
-          <span className="section-kicker">Educação profissional, tecnologia e inclusão produtiva</span>
-          <h2>Formação conectada à economia digital e ao empreendedorismo.</h2>
-          <p>
-            O Pronatec Empreender apoia ofertas de qualificação profissional em áreas estratégicas, fortalecendo a
-            gestão pedagógica, a permanência dos estudantes e a empregabilidade.
-          </p>
-          <div className="home-actions">
-            <button type="button" onClick={() => onNavigate('validate')}>
-              <Search size={18} aria-hidden="true" />
-              Consulta de interessados
-            </button>
-            <button className="secondary-action" type="button" onClick={() => onNavigate('dashboard')}>
-              <LayoutDashboard size={18} aria-hidden="true" />
-              Acessar SETEC
-            </button>
-            <button className="secondary-action" type="button" onClick={() => onNavigate('secondaryDashboard')}>
-              <Database size={18} aria-hidden="true" />
-              Coordenação
-            </button>
-          </div>
-        </div>
-        <div className="home-visual" aria-hidden="true">
-          <div className="orbit-card main">
-            <Rocket size={28} />
-            <strong>Economia digital</strong>
-          </div>
-          <div className="orbit-card one">IA</div>
-          <div className="orbit-card two">3D</div>
-          <div className="orbit-card three">Apps</div>
-        </div>
-      </section>
-
-      <section className="home-stats">
-        <HomeStat value="2025" label="ciclo de lançamento" />
-        <HomeStat value="3" label="cursos apoiados" />
-        <HomeStat value="30" label="instituições contempladas" />
-        <HomeStat value="6.900" label="vagas aprovadas" />
-      </section>
-
-      <section className="home-grid">
-        <article className="home-panel panel">
-          <header>
-            <BookOpen size={20} aria-hidden="true" />
-            <h2>Cursos do programa</h2>
-          </header>
-          <div className="course-list">
-          {HOME_COURSES.map((course) => (
-              <div className="course-card" key={course.title}>
-                <strong>{course.title}</strong>
-                <p>{course.text}</p>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article className="home-panel panel">
-          <header>
-            <Gauge size={20} aria-hidden="true" />
-            <h2>Leitura para gestão pública</h2>
-          </header>
-          <div className="policy-list">
-            <div>
-              <span>01</span>
-              <p>Mapear demanda por cursos e território para apoiar a expansão de ofertas.</p>
-            </div>
-            <div>
-              <span>02</span>
-              <p>Observar inclusão digital, renda, ocupação e perfil empreendedor dos inscritos.</p>
-            </div>
-            <div>
-              <span>03</span>
-              <p>Orientar ações para públicos vulneráveis, participação regional e permanência.</p>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section className="community-card panel">
-        <div>
-          <span className="section-kicker">Comunidade</span>
-          <h2>Entre na comunidade do WhatsApp</h2>
-          <p>
-            A comunidade concentra avisos, comunicados e orientações relacionadas ao Pronatec Empreender, facilitando o
-            acompanhamento das informações pelos participantes.
-          </p>
-        </div>
-        <a className="whatsapp-button" href="https://chat.whatsapp.com/BQucupAq2TNEfGKkrdkhRi" target="_blank" rel="noreferrer">
-          <MessageCircle size={18} aria-hidden="true" />
-          Entrar na comunidade
-          <ExternalLink size={15} aria-hidden="true" />
-        </a>
-      </section>
-
-      <section className="source-note">
-        <p>
-          Informações institucionais resumidas a partir do site oficial do Pronatec Empreender.
-          <a href="https://empreender.pronatec.ifce.edu.br/" target="_blank" rel="noreferrer">
-            Abrir fonte
-            <ExternalLink size={15} aria-hidden="true" />
-          </a>
-        </p>
-      </section>
-    </div>
-  );
-}
-
-function HomeStat({ value, label }) {
-  return (
-    <article className="home-stat">
-      <strong>{value}</strong>
-      <span>{label}</span>
-    </article>
+    <AppShell activeView={activeView} onNavigate={setActiveView}>
+      {activeView === 'home' ? <HomePage onNavigate={setActiveView} /> : null}
+      {activeView === 'validate' ? <CpfValidator /> : null}
+      {activeView === 'dashboard' ? <Dashboard /> : null}
+      {activeView === 'secondaryDashboard' ? <SecondaryDashboard /> : null}
+    </AppShell>
   );
 }
 
