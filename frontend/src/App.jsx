@@ -34,11 +34,10 @@ import { loadRecaptcha } from './services/recaptchaService';
 
 import { formatCpf, onlyDigits } from './utils/cpf';
 import { getErrorMessage } from './utils/errorMessages';
-import { compactCenterLabel, displayLabel, formatNumber } from './utils/formatters';
-import { firstItem, percentFromYes, sortAgeRanges, sortRegions, sumCounts } from './utils/chartUtils';
+import { formatNumber } from './utils/formatters';
+import { firstItem, percentFromYes, sortAgeRanges, sortRegions } from './utils/chartUtils';
 
 import { DashboardSkeleton } from './components/dashboard/DashboardSkeleton';
-import { ChartEmptyState } from './components/feedback/ChartEmptyState';
 import { StatePanel } from './components/feedback/StatePanel';
 import { MetricCard } from './components/ui/MetricCard';
 
@@ -48,9 +47,10 @@ import { MosaicPanel } from './components/charts/MosaicPanel';
 import { PiePanel } from './components/charts/PiePanel';
 import { PillPanel } from './components/charts/PillPanel';
 import { StackPanel } from './components/charts/StackPanel';
+import { GenericChartPanel } from './components/charts/GenericChartPanel';
+import { LookerDonutPanel } from './components/charts/LookerDonutPanel';
+import { ScheduleColumnPanel } from './components/charts/ScheduleColumnPanel';
 
-
-const CHART_ICONS = [BarChart3, MapPin, Users, Gauge, GraduationCap, ShieldCheck];
 
 function CaptchaBox({ siteKey, onTokenChange, onReady, onError, resetKey }) {
   const containerRef = useRef(null);
@@ -648,21 +648,6 @@ function SecondaryDashboardContent({ summary }) {
   );
 }
 
-function GenericChartPanel({ chart, index }) {
-  const Icon = CHART_ICONS[index % CHART_ICONS.length];
-  const items = chart.items || [];
-  const type = chart.type || 'bar';
-
-  // O Apps Script informa o tipo de gráfico; este componente escolhe o visual correspondente.
-  if (chart.id === 'starts-by-month') return <ScheduleColumnPanel title={chart.title || 'Início das ofertas'} icon={Icon} items={items} />;
-  if (type === 'donut') return <LookerDonutPanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
-  if (type === 'pie') return <PiePanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
-  if (type === 'pill') return <PillPanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
-  if (type === 'mosaic') return <MosaicPanel title={chart.title || 'Indicador'} icon={Icon} items={items} />;
-
-  return <ChartPanel title={chart.title || 'Indicador'} icon={Icon} items={items} variant={type === 'column' ? 'column' : 'bar'} />;
-}
-
 function DashboardContent({ summary }) {
   const topCourse = firstItem(summary.byCourse);
   const topRegion = firstItem(summary.byRegion);
@@ -720,154 +705,6 @@ function DashboardContent({ summary }) {
         <ChartPanel title="Modo de acesso à internet" icon={ShieldCheck} items={summary.byInternetMode} variant="bar" />
       </section>
     </div>
-  );
-}
-
-function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false }) {
-  const max = Math.max(...items.map((item) => item.count), 1);
-  const total = sumCounts(items);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const activeItem = items[activeIndex] || items[0];
-  const activeDetails = activeItem?.details || [];
-
-  // Ao passar o mouse ou focar uma coluna, os campi daquela data aparecem abaixo do gráfico.
-  return (
-    <article className={`chart-panel column schedule-panel ${featured ? 'featured' : ''}`}>
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      {items.length ? (
-        <>
-          <div className="column-list schedule-column-list">
-            {items.map((item, index) => {
-              const percent = total ? Math.round((Number(item.count || 0) / total) * 100) : 0;
-              const label = displayLabel(item.label);
-              const detailNames = (item.details || []).map((detail) => detail.campus).filter(Boolean).slice(0, 6);
-              const tooltip = `${label}: ${formatNumber(item.count)} (${percent}%)${detailNames.length ? ` - ${detailNames.join('; ')}` : ''}`;
-
-              return (
-                <div
-                  className={`column-item ${index === activeIndex ? 'active' : ''}`}
-                  key={`${title}-${item.label}`}
-                  title={tooltip}
-                  tabIndex={0}
-                  aria-label={tooltip}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  onFocus={() => setActiveIndex(index)}
-                >
-                  <div className="bar-label">
-                    <span>{label}</span>
-                    <strong>{formatNumber(item.count)}</strong>
-                  </div>
-                  <div className="column-track">
-                    <span style={{ '--bar-height': `${Math.max((item.count / max) * 100, 4)}%` }} />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className="schedule-details" aria-live="polite">
-            <div className="schedule-details-head">
-              <strong>{displayLabel(activeItem?.label) || 'Sem data'}</strong>
-              <span>{formatNumber(activeItem?.count)} oferta{Number(activeItem?.count || 0) === 1 ? '' : 's'}</span>
-            </div>
-            {activeDetails.length ? (
-              <ul>
-                {activeDetails.slice(0, 8).map((detail, index) => (
-                  <li key={`${activeItem.label}-${detail.campus}-${detail.course}-${index}`}>
-                    <strong>{detail.campus || 'Campus não informado'}</strong>
-                    <span>{detail.course || 'Curso não informado'}</span>
-                    {detail.institution ? <small>{detail.institution}</small> : null}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>Nenhum campus informado para esta data.</p>
-            )}
-            {activeDetails.length > 8 ? <p>+ {formatNumber(activeDetails.length - 8)} outros campi nesta data.</p> : null}
-          </div>
-        </>
-      ) : (
-        <ChartEmptyState />
-      )}
-    </article>
-  );
-}
-
-function LookerDonutPanel({ title, icon: Icon, items = [] }) {
-  const total = sumCounts(items);
-  const colors = ['#c22a4b', '#1f7a52', '#82c545', '#2a6f9f', '#d08112', '#b8c7b2', '#6f7d72'];
-  const [activeIndex, setActiveIndex] = useState(0);
-  let cursor = 0;
-  const slices = items.map((item, index) => {
-    const percent = total ? (Number(item.count || 0) / total) * 100 : 0;
-    const start = cursor;
-    cursor += percent;
-    return {
-      ...item,
-      percent: Math.round(percent),
-      color: colors[index % colors.length],
-      start,
-      end: cursor,
-    };
-  });
-  const activeSlice = slices[activeIndex] || slices[0];
-  const activeLabel = compactCenterLabel(activeSlice?.label);
-
-  // Rosca interativa no estilo Looker Studio: legenda e fatias controlam o percentual central.
-  return (
-    <article className="chart-panel looker-donut-panel">
-      <header>
-        <Icon size={18} aria-hidden="true" />
-        <h2>{title}</h2>
-      </header>
-      <div className="looker-donut-layout">
-        <svg className="looker-donut" viewBox="0 0 220 220" role="img" aria-label={`${title}. Passe o mouse nas fatias para ver percentuais.`}>
-          <circle className="donut-bg" cx="110" cy="110" r="84" />
-          {slices.map((slice, index) => (
-            <circle
-              className={`donut-slice ${index === activeIndex ? 'active' : ''}`}
-              key={`${title}-${slice.label}`}
-              cx="110"
-              cy="110"
-              r="84"
-              pathLength="100"
-              stroke={slice.color}
-              strokeDasharray={`${slice.percent} ${100 - slice.percent}`}
-              strokeDashoffset={-slice.start}
-              tabIndex={0}
-              onMouseEnter={() => setActiveIndex(index)}
-              onFocus={() => setActiveIndex(index)}
-            >
-              <title>{`${displayLabel(slice.label)}: ${slice.percent}% (${formatNumber(slice.count)})`}</title>
-            </circle>
-          ))}
-          <text className="donut-center-value" x="110" y="104" textAnchor="middle">
-            {activeSlice ? `${activeSlice.percent}%` : '0%'}
-          </text>
-          <text className="donut-center-label" x="110" y="130" textAnchor="middle">
-            {activeLabel || 'Sem dados'}
-          </text>
-        </svg>
-        <div className="looker-legend">
-          {slices.map((slice, index) => (
-            <div
-              className={index === activeIndex ? 'active' : ''}
-              key={`${title}-${slice.label}`}
-              onMouseEnter={() => setActiveIndex(index)}
-              onFocus={() => setActiveIndex(index)}
-              tabIndex={0}
-            >
-              <span className="legend-dot" style={{ '--legend-color': slice.color }} />
-              <span>{displayLabel(slice.label)}</span>
-              <strong>{formatNumber(slice.count)}</strong>
-              <small>{slice.percent}%</small>
-            </div>
-          ))}
-        </div>
-      </div>
-    </article>
   );
 }
 
