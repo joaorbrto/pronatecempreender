@@ -1,3 +1,5 @@
+import './DashboardSkeleton.css';
+
 export function DashboardSkeleton() {
   return (
     <div className="dashboard-skeleton" aria-busy="true" aria-live="polite">

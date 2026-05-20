@@ -1,5 +1,7 @@
 import { BarChart3 } from 'lucide-react';
 
+import './feedback.css';
+
 export function ChartEmptyState() {
   return (
     <div className="chart-empty">

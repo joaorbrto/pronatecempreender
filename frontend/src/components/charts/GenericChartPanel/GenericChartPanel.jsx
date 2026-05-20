@@ -1,10 +1,10 @@
-import { ChartPanel } from './ChartPanel';
-import { LookerDonutPanel } from './LookerDonutPanel';
-import { MosaicPanel } from './MosaicPanel';
-import { PiePanel } from './PiePanel';
-import { PillPanel } from './PillPanel';
-import { ScheduleColumnPanel } from './ScheduleColumnPanel';
-import { CHART_ICONS } from './chartIcons';
+import { ChartPanel } from '../ChartPanel/ChartPanel';
+import { LookerDonutPanel } from '../LookerDonutPanel/LookerDonutPanel';
+import { MosaicPanel } from '../MosaicPanel/MosaicPanel';
+import { PiePanel } from '../PiePanel/PiePanel';
+import { PillPanel } from '../PillPanel/PillPanel';
+import { ScheduleColumnPanel } from '../ScheduleColumnPanel/ScheduleColumnPanel';
+import { CHART_ICONS } from '../chartIcons';
 
 export function GenericChartPanel({ chart, index }) {
   const Icon = CHART_ICONS[index % CHART_ICONS.length];

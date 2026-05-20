@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
-import { sumCounts } from '../../utils/chartUtils';
-import { compactCenterLabel, displayLabel, formatNumber } from '../../utils/formatters';
+import { sumCounts } from '../../../utils/chartUtils';
+import { compactCenterLabel, displayLabel, formatNumber } from '../../../utils/formatters';
+
+import './LookerDonutPanel.css';
 
 export function LookerDonutPanel({ title, icon: Icon, items = [] }) {
   const total = sumCounts(items);

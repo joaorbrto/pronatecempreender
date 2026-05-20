@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
-import { ChartEmptyState } from '../feedback/ChartEmptyState';
-import { sumCounts } from '../../utils/chartUtils';
-import { displayLabel, formatNumber } from '../../utils/formatters';
+import { ChartEmptyState } from '../../feedback/ChartEmptyState';
+import { sumCounts } from '../../../utils/chartUtils';
+import { displayLabel, formatNumber } from '../../../utils/formatters';
+
+import './ScheduleColumnPanel.css';
 
 export function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false }) {
   const max = Math.max(...items.map((item) => item.count), 1);

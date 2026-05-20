@@ -1,11 +1,11 @@
 import { BarChart3, Gauge, GraduationCap, MapPin, ShieldCheck, Users } from 'lucide-react';
 
-import { ChartPanel } from '../../components/charts/ChartPanel';
-import { DonutPanel } from '../../components/charts/DonutPanel';
-import { LookerDonutPanel } from '../../components/charts/LookerDonutPanel';
-import { MosaicPanel } from '../../components/charts/MosaicPanel';
-import { PillPanel } from '../../components/charts/PillPanel';
-import { StackPanel } from '../../components/charts/StackPanel';
+import { ChartPanel } from '../../components/charts/ChartPanel/ChartPanel';
+import { DonutPanel } from '../../components/charts/DonutPanel/DonutPanel';
+import { LookerDonutPanel } from '../../components/charts/LookerDonutPanel/LookerDonutPanel';
+import { MosaicPanel } from '../../components/charts/MosaicPanel/MosaicPanel';
+import { PillPanel } from '../../components/charts/PillPanel/PillPanel';
+import { StackPanel } from '../../components/charts/StackPanel/StackPanel';
 import { MetricCard } from '../../components/ui/MetricCard';
 import { firstItem, percentFromYes, sortAgeRanges, sortRegions } from '../../utils/chartUtils';
 import { formatNumber } from '../../utils/formatters';

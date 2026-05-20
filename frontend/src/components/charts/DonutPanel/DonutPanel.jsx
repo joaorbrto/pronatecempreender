@@ -1,5 +1,7 @@
-import { countYes, sumCounts } from '../../utils/chartUtils';
-import { displayLabel, formatNumber } from '../../utils/formatters';
+import { countYes, sumCounts } from '../../../utils/chartUtils';
+import { displayLabel, formatNumber } from '../../../utils/formatters';
+
+import './DonutPanel.css';
 
 export function DonutPanel({ title, icon: Icon, items = [], highlight, centerLabel = 'Sim', primaryCount }) {
   const yes = countYes(items);

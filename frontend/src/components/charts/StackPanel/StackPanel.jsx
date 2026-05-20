@@ -1,5 +1,7 @@
-import { percentFromYes } from '../../utils/chartUtils';
-import { displayLabel } from '../../utils/formatters';
+import { percentFromYes } from '../../../utils/chartUtils';
+import { displayLabel } from '../../../utils/formatters';
+
+import './StackPanel.css';
 
 export function StackPanel({ title, icon: Icon, groups }) {
   return (

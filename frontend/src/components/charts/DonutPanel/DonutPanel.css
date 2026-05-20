@@ -1,0 +1,81 @@
+/* donut */
+
+.donut-panel {
+  min-height: 260px;
+}
+
+.donut-wrap {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.donut {
+  width: 132px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, var(--panel) 0 56%, transparent 57%),
+    conic-gradient(from -90deg, var(--if-green) 0 var(--percent), var(--line-soft) var(--percent) 100%);
+  transition: filter var(--dur-3) var(--ease-out);
+}
+
+.donut-panel:hover .donut {
+  filter: drop-shadow(0 2px 6px rgba(47, 158, 65, 0.18));
+}
+
+.donut strong,
+.donut span {
+  grid-area: 1 / 1;
+}
+
+.donut strong {
+  align-self: center;
+  max-width: 92px;
+  color: var(--ink);
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.donut span {
+  align-self: end;
+  margin-bottom: 36px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.donut-legend,
+.stack-list {
+  display: grid;
+  gap: 8px;
+}
+
+.donut-legend div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+.donut-legend span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.donut-legend strong {
+  color: var(--if-green-dark);
+  font-weight: 600;
+}

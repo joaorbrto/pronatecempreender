@@ -1,6 +1,8 @@
-import { ChartEmptyState } from '../feedback/ChartEmptyState';
-import { sumCounts } from '../../utils/chartUtils';
-import { displayLabel, formatNumber } from '../../utils/formatters';
+import { ChartEmptyState } from '../../feedback/ChartEmptyState';
+import { sumCounts } from '../../../utils/chartUtils';
+import { displayLabel, formatNumber } from '../../../utils/formatters';
+
+import './ChartPanel.css';
 
 export function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
   const max = Math.max(...items.map((item) => item.count), 1);

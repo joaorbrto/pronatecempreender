@@ -1,7 +1,7 @@
 import { BarChart3, Database, Gauge, MapPin, Users } from 'lucide-react';
 
-import { GenericChartPanel } from '../../components/charts/GenericChartPanel';
-import { ScheduleColumnPanel } from '../../components/charts/ScheduleColumnPanel';
+import { GenericChartPanel } from '../../components/charts/GenericChartPanel/GenericChartPanel';
+import { ScheduleColumnPanel } from '../../components/charts/ScheduleColumnPanel/ScheduleColumnPanel';
 import { StatePanel } from '../../components/feedback/StatePanel';
 import { MetricCard } from '../../components/ui/MetricCard';
 import { firstItem } from '../../utils/chartUtils';

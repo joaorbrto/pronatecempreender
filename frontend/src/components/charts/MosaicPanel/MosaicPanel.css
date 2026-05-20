@@ -1,0 +1,43 @@
+/* mosaic */
+
+.mosaic-panel {
+  min-height: 300px;
+}
+
+.mosaic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mosaic-tile {
+  min-height: calc(82px * var(--tile-scale));
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--panel-tint);
+  border: 0.5px solid var(--line);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.mosaic-tile:hover {
+  border-color: var(--if-green);
+  background: var(--if-green-softer);
+}
+
+.mosaic-tile strong {
+  color: var(--if-green-dark);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.mosaic-tile span {
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.3;
+}

@@ -114,3 +114,39 @@ dd {
 .warning .link-button:hover {
   background: #8a5300;
 }
+
+.chart-empty {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-height: 140px;
+  padding: 22px 16px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  text-align: center;
+}
+
+.chart-empty svg {
+  margin-bottom: 4px;
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--line-soft);
+  color: var(--muted);
+  box-sizing: border-box;
+}
+
+.chart-empty strong {
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.chart-empty span {
+  max-width: 220px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}

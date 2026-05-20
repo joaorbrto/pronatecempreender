@@ -1,5 +1,7 @@
-import { sumCounts } from '../../utils/chartUtils';
-import { displayLabel } from '../../utils/formatters';
+import { sumCounts } from '../../../utils/chartUtils';
+import { displayLabel } from '../../../utils/formatters';
+
+import './PiePanel.css';
 
 export function PiePanel({ title, icon: Icon, items = [] }) {
   const total = sumCounts(items);
