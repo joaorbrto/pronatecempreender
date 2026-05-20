@@ -1,3 +1,5 @@
+import './feedback.css';
+
 export function StatePanel({
   tone,
   icon: Icon,
