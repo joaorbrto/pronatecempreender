@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Loader2, Search } from 'lucide-react';
 
+import './CpfValidator.css';
+
 import { APPS_SCRIPT_URL, RECAPTCHA_SITE_KEY } from '../../config/env';
 import { postToAppsScript } from '../../services/appsScriptClient';
 import { formatCpf, onlyDigits } from '../../utils/cpf';
