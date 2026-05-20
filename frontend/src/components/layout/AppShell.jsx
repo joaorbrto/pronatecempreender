@@ -2,6 +2,8 @@ import { Database, Home, LayoutDashboard, Search, ShieldCheck } from 'lucide-rea
 
 import { PAGE_COPY } from '../../data/pageCopy';
 
+import './AppShell.css';
+
 export function AppShell({ activeView, onNavigate, children }) {
   return (
     <main className="app-frame">
