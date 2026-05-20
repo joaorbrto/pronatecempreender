@@ -1,0 +1,71 @@
+/* ============================================================
+   SETUP / NOVAS FONTES
+   ============================================================ */
+
+.setup-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.9fr);
+  gap: 24px;
+  align-items: start;
+  border-left: 3px solid var(--if-green);
+  background:
+    radial-gradient(90% 120% at 100% 0%, rgba(47, 158, 65, 0.08) 0%, transparent 58%),
+    var(--panel);
+}
+
+.setup-panel h2 {
+  margin-bottom: 10px;
+  color: var(--ink);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.setup-panel p {
+  max-width: 680px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.setup-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.setup-grid div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-xs);
+}
+
+.setup-grid svg {
+  grid-row: span 2;
+  padding: 7px;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  color: var(--if-green-strong);
+  background: var(--if-green-softer);
+  box-sizing: border-box;
+}
+
+.setup-grid strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.setup-grid span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+

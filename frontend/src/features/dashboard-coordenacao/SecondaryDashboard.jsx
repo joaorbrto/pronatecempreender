@@ -1,6 +1,10 @@
 import { AlertCircle, Database, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
+import './DashboardCoordenacao.css';
+import '../dashboard-setec/DashboardSetec.css';
+import './DashboardCoordenacao.css';
+
 import { SECONDARY_APPS_SCRIPT_URL } from '../../config/env';
 import { DashboardSkeleton } from '../../components/dashboard/DashboardSkeleton';
 import { StatePanel } from '../../components/feedback/StatePanel';

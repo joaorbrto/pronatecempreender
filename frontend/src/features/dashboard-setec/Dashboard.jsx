@@ -1,6 +1,8 @@
 import { AlertCircle, BarChart3, Gauge, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
+import './DashboardSetec.css';
+
 import { DashboardSkeleton } from '../../components/dashboard/DashboardSkeleton';
 import { StatePanel } from '../../components/feedback/StatePanel';
 import { postToAppsScript } from '../../services/appsScriptClient';

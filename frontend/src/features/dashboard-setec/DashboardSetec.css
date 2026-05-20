@@ -1,0 +1,126 @@
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+.dashboard-layout,
+.dashboard-content {
+  display: grid;
+  gap: 16px;
+}
+
+.metric-grid,
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.metric-card {
+  min-height: auto;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 18px 20px;
+  color: var(--ink);
+  transition:
+    transform var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--if-green) 0%, var(--if-green-strong) 100%);
+}
+
+.metric-card::after {
+  display: none;
+}
+
+.metric-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(47, 158, 65, 0.32);
+  box-shadow: var(--shadow-sm);
+}
+
+.metric-card > svg {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 7px;
+  border-radius: var(--radius-sm);
+  background: var(--if-green-softer);
+  color: var(--if-green-strong);
+  box-sizing: border-box;
+  margin-top: 2px;
+}
+
+.metric-card div {
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.metric-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-card strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+
+.metric-card small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.metric-card.success::before {
+  background: linear-gradient(90deg, var(--if-green) 0%, var(--if-green-strong) 100%);
+}
+
+.metric-card.warning::before {
+  background: linear-gradient(90deg, var(--amber) 0%, #8a5300 100%);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dashboard-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.dashboard-feature-grid > .chart-panel {
+  grid-column: 1 / -1;
+}
+
+.dashboard-grid.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
