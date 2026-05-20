@@ -1,0 +1,74 @@
+/* ============================================================
+   PRINT (dashboard amigavel para impressao / PDF)
+   ============================================================ */
+
+@media print {
+  :root {
+    --page: #ffffff;
+  }
+
+  body {
+    background: #ffffff;
+  }
+
+  .app-frame {
+    display: block;
+  }
+
+  .sidebar,
+  .admin-panel,
+  .form-panel,
+  .home-actions,
+  .whatsapp-button,
+  .community-card .whatsapp-button {
+    display: none !important;
+  }
+
+  .workspace {
+    padding: 0;
+  }
+
+  .workspace-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .panel,
+  .result-panel,
+  .chart-panel,
+  .metric-card,
+  .home-stat {
+    box-shadow: none !important;
+    border-color: #cbd5cd !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .chart-panel {
+    min-height: auto;
+  }
+
+  .metric-grid,
+  .insight-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .home-stat,
+  .metric-card {
+    page-break-inside: avoid;
+  }
+
+  /* sem animacoes ao imprimir */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
