@@ -11,6 +11,8 @@ import {
 
 import { HOME_COURSES } from '../../data/homeCourses';
 
+import './HomePage.css';
+
 export function HomePage({ onNavigate }) {
   return (
     <div className="home-page">
