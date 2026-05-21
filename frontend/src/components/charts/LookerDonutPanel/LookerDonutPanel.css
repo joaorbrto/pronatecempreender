@@ -6,9 +6,10 @@
 }
 
 .looker-donut-layout {
+  min-width: 0;
   display: grid;
-  grid-template-columns: minmax(240px, 0.82fr) minmax(260px, 1fr);
-  gap: 22px;
+  grid-template-columns: minmax(180px, 0.75fr) minmax(0, 1fr);
+  gap: clamp(16px, 3vw, 24px);
   align-items: center;
 }
 
@@ -28,8 +29,6 @@
 .donut-slice {
   fill: none;
   stroke-width: 32;
-  transform: rotate(-90deg);
-  transform-origin: 110px 110px;
   cursor: pointer;
   transition: opacity var(--dur-2) var(--ease-out), stroke-width var(--dur-2) var(--ease-out);
 }
@@ -66,11 +65,14 @@
 }
 
 .looker-legend {
+  min-width: 0;
+  width: 100%;
   display: grid;
   gap: 8px;
 }
 
 .looker-legend div {
+  min-width: 0;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 10px;
@@ -91,6 +93,7 @@
 }
 
 .looker-legend span:nth-child(2) {
+  min-width: 0;
   overflow: hidden;
   color: var(--ink);
   font-weight: 600;
@@ -108,4 +111,29 @@
   color: var(--muted);
   font-weight: 600;
   font-size: 0.78rem;
+}
+
+@media (max-width: 1200px) {
+  .looker-donut-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .looker-legend {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .looker-donut {
+    width: min(220px, 76vw);
+  }
+
+  .looker-legend div {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .looker-legend small {
+    display: none;
+  }
 }

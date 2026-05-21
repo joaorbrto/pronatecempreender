@@ -56,6 +56,7 @@ export function LookerDonutPanel({ title, icon: Icon, items = [] }) {
               stroke={slice.color}
               strokeDasharray={`${slice.percent} ${100 - slice.percent}`}
               strokeDashoffset={-slice.start}
+              transform  ="rotate(-90 110 110)"
               tabIndex={0}
               onMouseEnter={() => setActiveIndex(index)}
               onFocus={() => setActiveIndex(index)}
