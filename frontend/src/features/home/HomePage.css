@@ -1,0 +1,441 @@
+/* ============================================================
+   HOME
+   ============================================================ */
+
+.home-page {
+  display: grid;
+  gap: 20px;
+}
+
+.home-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 32px;
+  align-items: center;
+  overflow: hidden;
+  padding: 32px;
+  background:
+    radial-gradient(120% 80% at 100% 0%, rgba(47, 158, 65, 0.06) 0%, transparent 60%),
+    var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-kicker {
+  display: inline-flex;
+  margin-bottom: 12px;
+  color: var(--if-green-strong);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-hero h2 {
+  max-width: 640px;
+  margin-bottom: 14px;
+  color: var(--ink);
+  font-size: clamp(1.5rem, 2.6vw, 1.9rem);
+  font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+
+.home-hero p {
+  max-width: 600px;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.secondary-action {
+  color: var(--if-green-dark);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.secondary-action:hover:not(:disabled) {
+  color: var(--if-green-dark);
+  background: var(--if-green-softer);
+  border-color: var(--if-green);
+  box-shadow: 0 1px 3px rgba(15, 42, 28, 0.06);
+}
+
+/* painel institucional substitui o "orbit" original.
+   o JSX entrega 1 card principal + 3 tiles de eixo tematico. */
+
+.home-visual {
+  min-height: 260px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, rgba(47, 158, 65, 0.05) 0%, rgba(47, 158, 65, 0.02) 100%);
+  border: 1px solid rgba(47, 158, 65, 0.18);
+}
+
+.home-visual::before,
+.home-visual::after {
+  display: none;
+}
+
+.orbit-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-xs);
+  font-weight: 500;
+  font-size: 0.85rem;
+  transition:
+    transform var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out);
+}
+
+.orbit-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(47, 158, 65, 0.4);
+  box-shadow: var(--shadow-sm);
+}
+
+.orbit-card svg {
+  color: var(--if-green);
+}
+
+.orbit-card.main {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  text-align: left;
+  background:
+    linear-gradient(135deg, var(--if-green-dark) 0%, #1a3526 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: var(--shadow-sm);
+}
+
+.orbit-card.main:hover {
+  transform: translateY(-1px);
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+}
+
+.orbit-card.main svg {
+  color: #7fc68e;
+  flex-shrink: 0;
+}
+
+.orbit-card.main strong {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.005em;
+}
+
+.orbit-card.one,
+.orbit-card.two,
+.orbit-card.three {
+  width: auto;
+  aspect-ratio: auto;
+  min-height: 84px;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--if-green-dark);
+  background: var(--panel);
+}
+
+.orbit-card.one::before,
+.orbit-card.two::before,
+.orbit-card.three::before {
+  content: 'EIXO';
+  display: block;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.orbit-card.one::before { content: 'EIXO 01'; }
+.orbit-card.two::before { content: 'EIXO 02'; }
+.orbit-card.three::before { content: 'EIXO 03'; }
+
+/* stats */
+
+.home-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.home-stat {
+  position: relative;
+  min-height: auto;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  transition: box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
+}
+
+.home-stat::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--if-green) 0%, var(--if-green-strong) 100%);
+}
+
+.home-stat:hover {
+  border-color: rgba(47, 158, 65, 0.35);
+  box-shadow: var(--shadow-sm);
+}
+
+.home-stat strong {
+  display: block;
+  margin: 4px 0 6px;
+  color: var(--ink);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.home-stat span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* grid de painéis */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.9fr);
+  gap: 20px;
+}
+
+.home-panel header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--if-green-dark);
+}
+
+.home-panel header svg {
+  color: var(--if-green);
+}
+
+.home-panel h2 {
+  margin-bottom: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+.course-list,
+.policy-list {
+  display: grid;
+  gap: 10px;
+}
+
+.course-card {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out);
+}
+
+.course-card:hover {
+  border-color: var(--if-green);
+  background: var(--if-green-softer);
+  transform: translateX(2px);
+  box-shadow: var(--shadow-xs);
+}
+
+.course-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.96rem;
+  letter-spacing: -0.005em;
+}
+
+.course-card p {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.policy-list div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  transition: border-color var(--dur-2) var(--ease-out), background var(--dur-2) var(--ease-out);
+}
+
+.policy-list div:hover {
+  border-color: rgba(47, 158, 65, 0.35);
+  background: var(--if-green-softer);
+}
+
+.policy-list span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--if-green);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.78rem;
+  box-shadow: 0 1px 2px rgba(15, 42, 28, 0.18);
+}
+
+.policy-list p {
+  margin-bottom: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.source-note {
+  padding: 14px 16px;
+  border: 0.5px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+}
+
+.source-note p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.source-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--if-green);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.source-note a:hover {
+  text-decoration: underline;
+}
+
+/* community card */
+
+.community-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  background:
+    radial-gradient(80% 100% at 0% 0%, rgba(127, 198, 142, 0.18) 0%, transparent 60%),
+    var(--if-green-dark);
+  border-color: transparent;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.community-card .section-kicker {
+  color: #7fc68e;
+}
+
+.community-card h2 {
+  margin-bottom: 8px;
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.community-card p {
+  max-width: 720px;
+  margin-bottom: 0;
+  color: #c4d3c7;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.whatsapp-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--radius-sm);
+  padding: 0 18px;
+  color: var(--if-green-dark);
+  background: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(15, 42, 28, 0.12);
+  touch-action: manipulation;
+  transition:
+    background var(--dur-1) var(--ease-out),
+    color var(--dur-1) var(--ease-out),
+    transform var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out);
+}
+
+.whatsapp-button:hover {
+  background: var(--if-green);
+  color: #ffffff;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.25);
+}
+
+.whatsapp-button:active {
+  transform: scale(0.98);
+}

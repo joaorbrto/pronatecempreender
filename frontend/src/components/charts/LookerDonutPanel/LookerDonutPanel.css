@@ -1,0 +1,111 @@
+/* looker donut */
+
+.looker-donut-panel {
+  min-height: 340px;
+  background: var(--panel);
+}
+
+.looker-donut-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.82fr) minmax(260px, 1fr);
+  gap: 22px;
+  align-items: center;
+}
+
+.looker-donut {
+  width: min(100%, 264px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.donut-bg {
+  fill: none;
+  stroke: var(--line-soft);
+  stroke-width: 32;
+}
+
+.donut-slice {
+  fill: none;
+  stroke-width: 32;
+  transform: rotate(-90deg);
+  transform-origin: 110px 110px;
+  cursor: pointer;
+  transition: opacity var(--dur-2) var(--ease-out), stroke-width var(--dur-2) var(--ease-out);
+}
+
+.donut-slice:not(.active) {
+  opacity: 0.6;
+}
+
+.donut-slice.active {
+  opacity: 1;
+  stroke-width: 38;
+}
+
+.donut-slice:focus-visible {
+  outline: none;
+  opacity: 1;
+  stroke-width: 40;
+  filter: drop-shadow(0 0 0 2px rgba(47, 158, 65, 0.4));
+}
+
+.donut-center-value {
+  fill: var(--ink);
+  font-size: 1.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.donut-center-label {
+  fill: var(--muted);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.looker-legend {
+  display: grid;
+  gap: 8px;
+}
+
+.looker-legend div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 0.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-tint);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.looker-legend div.active,
+.looker-legend div:focus {
+  border-color: var(--if-green);
+  background: var(--if-green-softer);
+  outline: none;
+}
+
+.looker-legend span:nth-child(2) {
+  overflow: hidden;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.looker-legend strong {
+  color: var(--if-green-dark);
+  font-weight: 600;
+}
+
+.looker-legend small {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.78rem;
+}

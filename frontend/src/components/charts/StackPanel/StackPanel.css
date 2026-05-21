@@ -1,0 +1,27 @@
+/* ============================================================
+   STACK PANEL
+   ============================================================ */
+
+.stack-panel {
+  min-height: 260px;
+}
+
+.stack-list {
+  display: grid;
+  gap: 8px;
+}
+
+.stack-track {
+  height: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line-soft);
+}
+
+.stack-track span {
+  display: block;
+  min-width: 4px;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--if-green);
+}

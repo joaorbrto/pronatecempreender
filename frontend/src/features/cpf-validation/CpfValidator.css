@@ -1,0 +1,158 @@
+/* ============================================================
+   PANELS / FORMS / BUTTONS
+   ============================================================ */
+
+.panel,
+.result-panel,
+.chart-panel,
+.metric-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.panel {
+  padding: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: stretch;
+}
+
+input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  color: var(--ink);
+  background: var(--panel);
+  font-size: 0.95rem;
+  outline: none;
+  transition:
+    border-color var(--dur-2) var(--ease-out),
+    box-shadow var(--dur-2) var(--ease-out),
+    background var(--dur-2) var(--ease-out);
+}
+
+input::placeholder {
+  color: var(--muted-soft);
+}
+
+input:hover:not(:focus) {
+  border-color: var(--muted-soft);
+  background: var(--surface-2);
+}
+
+input:focus {
+  border-color: var(--if-green);
+  background: var(--panel);
+  box-shadow: var(--shadow-focus);
+}
+
+input[aria-invalid='true'] {
+  border-color: var(--if-red);
+}
+
+input[aria-invalid='true']:focus {
+  box-shadow: var(--ring-error);
+}
+
+button,
+.link-button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 0 18px;
+  color: #ffffff;
+  background: var(--if-green);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 1px 0 rgba(15, 42, 28, 0.08);
+  transition:
+    background var(--dur-1) var(--ease-out),
+    box-shadow var(--dur-1) var(--ease-out),
+    transform var(--dur-1) var(--ease-out),
+    opacity var(--dur-1) var(--ease-out);
+}
+
+button:hover:not(:disabled),
+.link-button:hover {
+  background: var(--if-green-strong);
+  box-shadow: 0 2px 6px -1px rgba(15, 42, 28, 0.15);
+}
+
+button:active:not(:disabled),
+.link-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 0 rgba(15, 42, 28, 0.08);
+}
+
+button:focus-visible,
+.link-button:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.home-actions button {
+  background: var(--if-green);
+}
+
+.home-actions button:hover:not(:disabled) {
+  background: var(--if-green-strong);
+}
+
+#cpf-help,
+.panel p,
+.muted {
+  margin: 8px 0 16px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.form-panel #cpf-help {
+  margin-top: 8px;
+}
+
+.admin-panel {
+  background: var(--panel);
+}
+
+.admin-panel p {
+  margin-bottom: 0;
+}
+
+.captcha {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+}

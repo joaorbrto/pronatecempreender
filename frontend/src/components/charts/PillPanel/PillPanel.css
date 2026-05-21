@@ -1,0 +1,57 @@
+/* ============================================================
+   PILL PANEL
+   ============================================================ */
+
+.pill-panel {
+  min-height: 300px;
+}
+
+.pill-list {
+  display: grid;
+  gap: 10px;
+}
+
+.pill-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 0.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--panel-tint);
+  transition: border-color 160ms ease;
+}
+
+.pill-row:hover {
+  border-color: var(--if-green);
+}
+
+.pill-row > span {
+  overflow: hidden;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 0.88rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pill-row strong {
+  color: var(--if-green-dark);
+  font-weight: 600;
+}
+
+.pill-meter {
+  grid-column: 1 / -1;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--line-soft);
+}
+
+.pill-meter span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--if-green);
+}
