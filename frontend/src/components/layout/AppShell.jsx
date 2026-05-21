@@ -1,10 +1,31 @@
 import { Database, Home, LayoutDashboard, Search, ShieldCheck } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { PAGE_COPY } from '../../data/pageCopy';
 
 import './AppShell.css';
 
-export function AppShell({ activeView, onNavigate, children }) {
+const NAV_ITEMS = [
+  { view: 'home', path: '/', label: 'Início', icon: Home },
+  { view: 'validate', path: '/consulta', label: 'Consulta de Interessados', icon: Search },
+  { view: 'dashboard', path: '/setec', label: 'SETEC', icon: LayoutDashboard },
+  { view: 'secondaryDashboard', path: '/coordenacao', label: 'Coordenação', icon: Database },
+];
+
+function getActiveView(pathname) {
+  if (pathname.startsWith('/consulta')) return 'validate';
+  if (pathname.startsWith('/setec')) return 'dashboard';
+  if (pathname.startsWith('/coordenacao')) return 'secondaryDashboard';
+
+  return 'home';
+}
+
+export function AppShell({ children }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activeView = getActiveView(location.pathname);
+  const pageCopy = PAGE_COPY[activeView];
+
   return (
     <main className="app-frame">
       <aside className="sidebar" aria-label="Navegação principal">
@@ -14,41 +35,21 @@ export function AppShell({ activeView, onNavigate, children }) {
         </div>
 
         <nav className="side-nav">
-          <button
-            className={activeView === 'home' ? 'active' : ''}
-            type="button"
-            onClick={() => onNavigate('home')}
-          >
-            <Home size={19} aria-hidden="true" />
-            <span>Início</span>
-          </button>
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
 
-          <button
-            className={activeView === 'validate' ? 'active' : ''}
-            type="button"
-            onClick={() => onNavigate('validate')}
-          >
-            <Search size={19} aria-hidden="true" />
-            <span>Consulta de Interessados</span>
-          </button>
-
-          <button
-            className={activeView === 'dashboard' ? 'active' : ''}
-            type="button"
-            onClick={() => onNavigate('dashboard')}
-          >
-            <LayoutDashboard size={19} aria-hidden="true" />
-            <span>SETEC</span>
-          </button>
-
-          <button
-            className={activeView === 'secondaryDashboard' ? 'active' : ''}
-            type="button"
-            onClick={() => onNavigate('secondaryDashboard')}
-          >
-            <Database size={19} aria-hidden="true" />
-            <span>Coordenação</span>
-          </button>
+            return (
+              <button
+                className={activeView === item.view ? 'active' : ''}
+                type="button"
+                onClick={() => navigate(item.path)}
+                key={item.view}
+              >
+                <Icon size={19} aria-hidden="true" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
         <div className="sidebar-card">
@@ -61,15 +62,15 @@ export function AppShell({ activeView, onNavigate, children }) {
       <section className="workspace">
         <header className="workspace-header">
           <div>
-            {PAGE_COPY[activeView].eyebrow ? (
+            {pageCopy.eyebrow ? (
               <div className="badge">
                 <ShieldCheck size={18} aria-hidden="true" />
-                {PAGE_COPY[activeView].eyebrow}
+                {pageCopy.eyebrow}
               </div>
             ) : null}
 
-            <h1>{PAGE_COPY[activeView].title}</h1>
-            <p>{PAGE_COPY[activeView].description}</p>
+            <h1>{pageCopy.title}</h1>
+            <p>{pageCopy.description}</p>
           </div>
         </header>
 

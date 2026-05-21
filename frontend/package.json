@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "vite build",
+    "build": "vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {
@@ -13,7 +13,7 @@
     "lucide-react": "^0.561.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
+    "react-router-dom": "^7.15.1",
     "vite": "^7.2.6"
-  },
-  "devDependencies": {}
+  }
 }
