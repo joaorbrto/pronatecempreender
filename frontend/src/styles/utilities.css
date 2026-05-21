@@ -1,0 +1,38 @@
+/* numeros tabulares evitam shift de layout em valores dinamicos */
+.tabular-num,
+.metric-card strong,
+.home-stat strong,
+.bar-label strong,
+.donut strong,
+.donut-legend strong,
+.donut-center-value,
+.compact-pie-legend strong,
+.looker-legend strong,
+.looker-legend small,
+.mosaic-tile strong,
+.pill-row strong {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.spin {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
