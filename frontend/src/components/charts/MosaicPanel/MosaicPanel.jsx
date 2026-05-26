@@ -1,10 +1,11 @@
 import { ChartEmptyState } from '../../feedback/ChartEmptyState';
+import { HelpTooltip } from '../../help/HelpTooltip';
 import { sumCounts } from '../../../utils/chartUtils';
 import { displayLabel, formatNumber } from '../../../utils/formatters';
 
 import './MosaicPanel.css';
 
-export function MosaicPanel({ title, icon: Icon, items = [] }) {
+export function MosaicPanel({ title, icon: Icon, items = [], help = {} }) {
   const max = Math.max(...items.map((item) => item.count), 1);
   const total = sumCounts(items);
 
@@ -13,6 +14,7 @@ export function MosaicPanel({ title, icon: Icon, items = [] }) {
       <header>
         <Icon size={18} aria-hidden="true" />
         <h2>{title}</h2>
+        <HelpTooltip {...help} />
       </header>
 
       {items.length ? (

@@ -1,10 +1,11 @@
 import { ChartEmptyState } from '../../feedback/ChartEmptyState';
+import { HelpTooltip } from '../../help/HelpTooltip';
 import { sumCounts } from '../../../utils/chartUtils';
 import { displayLabel, formatNumber } from '../../../utils/formatters';
 
 import './PillPanel.css';
 
-export function PillPanel({ title, icon: Icon, items = [] }) {
+export function PillPanel({ title, icon: Icon, items = [], help = {} }) {
   const total = sumCounts(items);
 
   return (
@@ -12,6 +13,7 @@ export function PillPanel({ title, icon: Icon, items = [] }) {
       <header>
         <Icon size={18} aria-hidden="true" />
         <h2>{title}</h2>
+        <HelpTooltip {...help} />
       </header>
 
       {items.length ? (

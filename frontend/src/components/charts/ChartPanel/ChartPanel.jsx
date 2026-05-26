@@ -1,10 +1,11 @@
 import { ChartEmptyState } from '../../feedback/ChartEmptyState';
 import { sumCounts } from '../../../utils/chartUtils';
 import { displayLabel, formatNumber } from '../../../utils/formatters';
+import { HelpTooltip } from '../../help/HelpTooltip';
 
 import './ChartPanel.css';
 
-export function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
+export function ChartPanel({ title, icon: Icon, items = [], variant = 'bar', help = {} }) {
   const max = Math.max(...items.map((item) => item.count), 1);
   const total = sumCounts(items);
 
@@ -13,6 +14,7 @@ export function ChartPanel({ title, icon: Icon, items = [], variant = 'bar' }) {
       <header>
         <Icon size={18} aria-hidden="true" />
         <h2>{title}</h2>
+        <HelpTooltip {...help} />
       </header>
 
       {items.length ? (
