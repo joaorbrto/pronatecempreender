@@ -5,7 +5,7 @@
 .chart-panel {
   min-height: 260px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   padding: 22px;
   transition: box-shadow var(--dur-2) var(--ease-out), border-color var(--dur-2) var(--ease-out);
 }
@@ -25,6 +25,8 @@
 }
 
 .chart-panel header {
+  position: relative;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 10px;

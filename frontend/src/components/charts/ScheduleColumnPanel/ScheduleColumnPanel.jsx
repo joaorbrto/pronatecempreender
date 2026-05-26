@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
 import { ChartEmptyState } from '../../feedback/ChartEmptyState';
+import { HelpTooltip } from '../../help/HelpTooltip';
 import { sumCounts } from '../../../utils/chartUtils';
 import { displayLabel, formatNumber } from '../../../utils/formatters';
 
 import './ScheduleColumnPanel.css';
 
-export function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false }) {
+export function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = false, help = {} }) {
   const max = Math.max(...items.map((item) => item.count), 1);
   const total = sumCounts(items);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -18,6 +19,7 @@ export function ScheduleColumnPanel({ title, icon: Icon, items = [], featured = 
       <header>
         <Icon size={18} aria-hidden="true" />
         <h2>{title}</h2>
+        <HelpTooltip {...help} />
       </header>
 
       {items.length ? (

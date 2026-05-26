@@ -4,6 +4,7 @@ import { GenericChartPanel } from '../../components/charts/GenericChartPanel/Gen
 import { ScheduleColumnPanel } from '../../components/charts/ScheduleColumnPanel/ScheduleColumnPanel';
 import { StatePanel } from '../../components/feedback/StatePanel';
 import { MetricCard } from '../../components/ui/MetricCard';
+import { CHART_HELP } from '../../data/chartHelp';
 import { firstItem } from '../../utils/chartUtils';
 
 export function SecondaryDashboardContent({ summary }) {
@@ -33,6 +34,7 @@ export function SecondaryDashboardContent({ summary }) {
             icon={BarChart3}
             items={scheduleChart.items || []}
             featured
+            help={scheduleChart.help || CHART_HELP.secondaryStartsByMonth}
           />
         </section>
       ) : null}

@@ -1,14 +1,16 @@
 import { percentFromYes } from '../../../utils/chartUtils';
 import { displayLabel } from '../../../utils/formatters';
+import { HelpTooltip } from '../../help/HelpTooltip';
 
 import './StackPanel.css';
 
-export function StackPanel({ title, icon: Icon, groups }) {
+export function StackPanel({ title, icon: Icon, groups, help = {} }) {
   return (
     <article className="chart-panel stack-panel">
       <header>
         <Icon size={18} aria-hidden="true" />
         <h2>{title}</h2>
+        <HelpTooltip {...help} />
       </header>
 
       <div className="stack-list">
