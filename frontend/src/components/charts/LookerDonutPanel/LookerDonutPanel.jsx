@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
+import { HelpTooltip } from '../../help/HelpTooltip';
 import { sumCounts } from '../../../utils/chartUtils';
 import { compactCenterLabel, displayLabel, formatNumber } from '../../../utils/formatters';
 
 import './LookerDonutPanel.css';
 
-export function LookerDonutPanel({ title, icon: Icon, items = [] }) {
+export function LookerDonutPanel({ title, icon: Icon, items = [], help = {} }) {
   const total = sumCounts(items);
   const colors = ['#c22a4b', '#1f7a52', '#82c545', '#2a6f9f', '#d08112', '#b8c7b2', '#6f7d72'];
   const [activeIndex, setActiveIndex] = useState(0);
@@ -34,6 +35,7 @@ export function LookerDonutPanel({ title, icon: Icon, items = [] }) {
       <header>
         <Icon size={18} aria-hidden="true" />
         <h2>{title}</h2>
+        <HelpTooltip {...help} />
       </header>
 
       <div className="looker-donut-layout">
