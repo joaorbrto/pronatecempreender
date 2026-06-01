@@ -135,6 +135,30 @@
   box-shadow: var(--shadow-sm);
 }
 
+.orbit-card.main > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.orbit-card.main strong {
+  display: block;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.orbit-card.main span {
+  display: block;
+  color: #d9e2dc;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
 .orbit-card.main:hover {
   transform: translateY(-1px);
   border-color: transparent;
@@ -150,6 +174,10 @@
   font-weight: 600;
   font-size: 1rem;
   letter-spacing: -0.005em;
+}
+
+.orbit-card.main svg {
+  flex-shrink: 0;
 }
 
 .orbit-card.one,
@@ -306,14 +334,13 @@
 
 .policy-list div {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 14px;
-  align-items: start;
-  padding: 14px 16px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 18px 22px;
   border-radius: var(--radius-sm);
   background: var(--surface-2);
   border: 1px solid var(--line);
-  transition: border-color var(--dur-2) var(--ease-out), background var(--dur-2) var(--ease-out);
 }
 
 .policy-list div:hover {
@@ -325,21 +352,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: var(--if-green);
   color: #ffffff;
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   box-shadow: 0 1px 2px rgba(15, 42, 28, 0.18);
 }
 
 .policy-list p {
-  margin-bottom: 0;
+  margin: 0;
   color: var(--ink);
-  font-size: 0.9rem;
-  line-height: 1.55;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .source-note {
@@ -439,3 +466,272 @@
 .whatsapp-button:active {
   transform: scale(0.98);
 }
+
+/* ============================================================
+   HOME INSTITUCIONAL — AJUSTES DE ESPAÇAMENTO
+   ============================================================ */
+
+.home-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 20px;
+}
+
+.home-panel > p {
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+/* Cards de informação institucional */
+
+.info-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.info-card {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.info-card span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.info-card strong {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* Público-alvo */
+
+.audience-list {
+  display: grid;
+  gap: 10px;
+}
+
+.audience-list div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.audience-list svg {
+  margin-top: 2px;
+  color: var(--if-green);
+  flex-shrink: 0;
+}
+
+.audience-list span {
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Entregas pedagógicas */
+
+.deliverables-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.deliverable-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.deliverable-card svg {
+  margin-top: 2px;
+  color: var(--if-green);
+  flex-shrink: 0;
+}
+
+.deliverable-card span {
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Callout dos dashboards */
+
+.management-callout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 120% at 100% 0%, rgba(47, 158, 65, 0.08) 0%, transparent 58%),
+    var(--panel);
+}
+
+.management-callout h2 {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.management-callout p {
+  max-width: 760px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.management-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.management-actions button {
+  width: auto;
+  white-space: nowrap;
+}
+
+/* Ajuste fino dos objetivos para não ficarem gigantes demais */
+
+.home-panel .policy-list {
+  gap: 10px;
+}
+
+.home-panel .policy-list div {
+  min-height: auto;
+  padding: 18px 22px;
+}
+
+.home-panel .policy-list p {
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 1080px) {
+  .home-overview-grid,
+  .management-callout {
+    grid-template-columns: 1fr;
+  }
+
+  .management-actions {
+    justify-content: flex-start;
+  }
+
+  .management-actions button {
+    width: fit-content;
+  }
+}
+
+@media (max-width: 720px) {
+  .info-card-grid,
+  .deliverables-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .management-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .management-actions button {
+    width: 100%;
+  }
+}
+/* ============================================================
+   FAQ
+   ============================================================ */
+
+.faq-section {
+  display: grid;
+  gap: 16px;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.faq-item {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.faq-item summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 700;
+  line-height: 1.35;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: '+';
+  margin-left: auto;
+  color: var(--if-green);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.faq-item[open] summary {
+  color: var(--if-green-dark);
+  background: var(--if-green-softer);
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-item[open] summary::after {
+  content: '–';
+}
+
+.faq-item p {
+  margin: 0;
+  padding: 14px 16px 16px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+

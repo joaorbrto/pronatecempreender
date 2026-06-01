@@ -1,15 +1,28 @@
 import {
+  ArrowRight,
   BookOpen,
-  Database,
+  Building2,
+  CheckCircle2,
   ExternalLink,
   Gauge,
   LayoutDashboard,
   MessageCircle,
-  Rocket,
   Search,
+  ShieldCheck,
+  Sparkles,
+  Target,
+  Users,
 } from 'lucide-react';
 
 import { HOME_COURSES } from '../../data/homeCourses';
+import {
+  AUDIENCE_HIGHLIGHTS,
+  PROGRAM_DELIVERABLES,
+  PROGRAM_FAQ,
+  PROGRAM_INFO_CARDS,
+  PROGRAM_METRICS,
+  PROGRAM_OBJECTIVES,
+} from '../../data/homeInstitutional';
 
 import './HomePage.css';
 
@@ -18,11 +31,12 @@ export function HomePage({ onNavigate }) {
     <div className="home-page">
       <section className="home-hero panel">
         <div className="home-hero-copy">
-          <span className="section-kicker">Educação profissional, tecnologia e inclusão produtiva</span>
-          <h2>Formação conectada à economia digital e ao empreendedorismo.</h2>
+          <span className="section-kicker">Pronatec Empreender 2025</span>
+          <h2>Qualificação profissional para economia digital, inovação tecnológica e empreendedorismo.</h2>
           <p>
-            O Pronatec Empreender apoia ofertas de qualificação profissional em áreas estratégicas, fortalecendo a
-            gestão pedagógica, a permanência dos estudantes e a empregabilidade.
+            O Pronatec Empreender é um projeto de apoio técnico e pedagógico aos cursos do Pronatec,
+            com foco em gestão pedagógica moderna, empregabilidade, permanência dos estudantes e
+            fortalecimento das ofertas em áreas estratégicas.
           </p>
 
           <div className="home-actions">
@@ -37,35 +51,83 @@ export function HomePage({ onNavigate }) {
             </button>
 
             <button className="secondary-action" type="button" onClick={() => onNavigate('secondaryDashboard')}>
-              <Database size={18} aria-hidden="true" />
+              <Building2 size={18} aria-hidden="true" />
               Coordenação
             </button>
           </div>
         </div>
 
-        <div className="home-visual" aria-hidden="true">
+        <div className="home-visual" aria-label="Resumo institucional do programa">
           <div className="orbit-card main">
-            <Rocket size={28} />
-            <strong>Economia digital</strong>
+            <Sparkles size={28} />
+            <div>
+              <strong>3 cursos estratégicos</strong>
+              <span>IA, drones, impressão 3D e desenvolvimento ágil de aplicativos.</span>
+            </div>
           </div>
+
           <div className="orbit-card one">IA</div>
           <div className="orbit-card two">3D</div>
           <div className="orbit-card three">Apps</div>
         </div>
       </section>
 
-      <section className="home-stats">
-        <HomeStat value="2025" label="ciclo de lançamento" />
-        <HomeStat value="3" label="cursos apoiados" />
-        <HomeStat value="30" label="instituições contempladas" />
-        <HomeStat value="6.900" label="vagas aprovadas" />
+      <section className="home-stats" aria-label="Indicadores do Pronatec Empreender">
+        {PROGRAM_METRICS.map((metric) => (
+          <HomeStat value={metric.value} label={metric.label} key={metric.label} />
+        ))}
+      </section>
+
+      <section className="home-overview-grid">
+        <article className="home-panel panel">
+          <header>
+            <ShieldCheck size={20} aria-hidden="true" />
+            <h2>O que é o Pronatec Empreender?</h2>
+          </header>
+
+          <p>
+            É uma ação vinculada ao Programa Nacional de Acesso ao Ensino Técnico e Emprego, voltada
+            à modernização da formação profissional e ao apoio das instituições executoras na oferta
+            de cursos gratuitos, presenciais e de curta duração.
+          </p>
+
+          <div className="info-card-grid">
+            {PROGRAM_INFO_CARDS.map((item) => (
+              <div className="info-card" key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="home-panel panel">
+          <header>
+            <Users size={20} aria-hidden="true" />
+            <h2>Público-alvo e participação</h2>
+          </header>
+
+          <p>
+            As ofertas são disponibilizadas pelas instituições contempladas por meio de editais
+            públicos de seleção, seguindo as orientações nacionais do programa.
+          </p>
+
+          <div className="audience-list">
+            {AUDIENCE_HIGHLIGHTS.map((item) => (
+              <div key={item}>
+                <CheckCircle2 size={18} aria-hidden="true" />
+                <span>{item}</span>
+              </div>
+            ))}
+          </div>
+        </article>
       </section>
 
       <section className="home-grid">
         <article className="home-panel panel">
           <header>
             <BookOpen size={20} aria-hidden="true" />
-            <h2>Cursos do programa</h2>
+            <h2>Cursos ofertados</h2>
           </header>
 
           <div className="course-list">
@@ -80,34 +142,84 @@ export function HomePage({ onNavigate }) {
 
         <article className="home-panel panel">
           <header>
-            <Gauge size={20} aria-hidden="true" />
-            <h2>Leitura para gestão pública</h2>
+            <Target size={20} aria-hidden="true" />
+            <h2>Objetivos do programa</h2>
           </header>
 
           <div className="policy-list">
-            <div>
-              <span>01</span>
-              <p>Mapear demanda por cursos e território para apoiar a expansão de ofertas.</p>
-            </div>
-            <div>
-              <span>02</span>
-              <p>Observar inclusão digital, renda, ocupação e perfil empreendedor dos inscritos.</p>
-            </div>
-            <div>
-              <span>03</span>
-              <p>Orientar ações para públicos vulneráveis, participação regional e permanência.</p>
-            </div>
+            {PROGRAM_OBJECTIVES.map((objective, index) => (
+              <div key={objective}>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+                <p>{objective}</p>
+              </div>
+            ))}
           </div>
         </article>
       </section>
+
+      <section className="home-panel panel">
+        <header>
+          <Gauge size={20} aria-hidden="true" />
+          <h2>Entregas pedagógicas e apoio à execução</h2>
+        </header>
+
+        <div className="deliverables-grid">
+          {PROGRAM_DELIVERABLES.map((deliverable) => (
+            <div className="deliverable-card" key={deliverable}>
+              <CheckCircle2 size={18} aria-hidden="true" />
+              <span>{deliverable}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="management-callout panel">
+        <div>
+          <span className="section-kicker">Gestão e acompanhamento</span>
+          <h2>Indicadores para tomada de decisão</h2>
+          <p>
+            Além da consulta pública de interessados, o portal reúne dashboards administrativos para
+            acompanhamento das inscrições, distribuição territorial, perfil dos participantes e dados
+            agregados das instituições ofertantes.
+          </p>
+        </div>
+
+        <div className="management-actions">
+          <button type="button" onClick={() => onNavigate('dashboard')}>
+            Dashboard SETEC
+            <ArrowRight size={17} aria-hidden="true" />
+          </button>
+
+          <button className="secondary-action" type="button" onClick={() => onNavigate('secondaryDashboard')}>
+            Dashboard Coordenação
+            <ArrowRight size={17} aria-hidden="true" />
+          </button>
+        </div>
+      </section>
+
+      <section className="home-panel panel faq-section">
+  <header>
+    <ShieldCheck size={20} aria-hidden="true" />
+    <h2>Perguntas frequentes</h2>
+  </header>
+
+  <div className="faq-grid">
+    {PROGRAM_FAQ.map((item) => (
+      <details className="faq-item" key={item.question}>
+        <summary>{item.question}</summary>
+        <p>{item.answer}</p>
+      </details>
+    ))}
+  </div>
+</section>
 
       <section className="community-card panel">
         <div>
           <span className="section-kicker">Comunidade</span>
           <h2>Entre na comunidade do WhatsApp</h2>
           <p>
-            A comunidade concentra avisos, comunicados e orientações relacionadas ao Pronatec Empreender, facilitando o
-            acompanhamento das informações pelos participantes.
+            A comunidade concentra avisos, comunicados e orientações relacionadas ao Pronatec
+            Empreender, facilitando o acompanhamento das informações pelos participantes.
           </p>
         </div>
 
