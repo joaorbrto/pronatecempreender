@@ -1,4 +1,4 @@
-import { Database, Home, LayoutDashboard, Search, ShieldCheck } from 'lucide-react';
+import { Database, ExternalLink, Home, LayoutDashboard, Search, ShieldCheck } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { PAGE_COPY } from '../../data/pageCopy';
@@ -71,6 +71,18 @@ export function AppShell({ children }) {
 
             <h1>{pageCopy.title}</h1>
             <p>{pageCopy.description}</p>
+
+            {pageCopy.sourceUrl ? (
+              <a
+                className="workspace-source-link"
+                href={pageCopy.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {pageCopy.sourceLabel || 'Acessar fonte'}
+                <ExternalLink size={15} aria-hidden="true" />
+              </a>
+            ) : null}
           </div>
         </header>
 

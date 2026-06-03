@@ -198,20 +198,20 @@ export function HomePage({ onNavigate }) {
       </section>
 
       <section className="home-panel panel faq-section">
-  <header>
-    <ShieldCheck size={20} aria-hidden="true" />
-    <h2>Perguntas frequentes</h2>
-  </header>
+        <header>
+          <ShieldCheck size={20} aria-hidden="true" />
+          <h2>Perguntas frequentes</h2>
+        </header>
 
-  <div className="faq-grid">
-    {PROGRAM_FAQ.map((item) => (
-      <details className="faq-item" key={item.question}>
-        <summary>{item.question}</summary>
-        <p>{item.answer}</p>
-      </details>
-    ))}
-  </div>
-</section>
+        <div className="faq-grid">
+          {PROGRAM_FAQ.map((item) => (
+            <details className="faq-item" key={item.question}>
+              <summary>{item.question}</summary>
+              <p>{item.answer}</p>
+            </details>
+          ))}
+        </div>
+      </section>
 
       <section className="community-card panel">
         <div>
@@ -235,14 +235,23 @@ export function HomePage({ onNavigate }) {
         </a>
       </section>
 
-      <section className="source-note">
-        <p>
-          Informações institucionais resumidas a partir do site oficial do Pronatec Empreender.
-          <a href="https://empreender.pronatec.ifce.edu.br/" target="_blank" rel="noreferrer">
-            Abrir fonte
-            <ExternalLink size={15} aria-hidden="true" />
-          </a>
-        </p>
+      <section className="source-note contacts-note">
+        <p>Contatos do projeto:</p>
+
+        <ul>
+          <li>
+            <strong>Prof. Carlos Hairon</strong> (IFCE) ·{' '}
+            <a href="mailto:hairon@ifce.edu.br">hairon@ifce.edu.br</a>
+          </li>
+          <li>
+            <strong>Prof. Vinícius Calou</strong> (IFCE) ·{' '}
+            <a href="mailto:vinicius.calou@ifce.edu.br">vinicius.calou@ifce.edu.br</a>
+          </li>
+          <li>
+            <strong>Prof. Stelio Bastos</strong> (IFCE) ·{' '}
+            <a href="mailto:stelio.bastos@ifce.edu.br">stelio.bastos@ifce.edu.br</a>
+          </li>
+        </ul>
       </section>
     </div>
   );

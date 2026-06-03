@@ -203,6 +203,22 @@
   line-height: 1.6;
 }
 
+.workspace-source-link {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--if-green-dark);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.workspace-source-link:hover {
+  text-decoration: underline;
+}
+
 .single-column {
   width: min(100%, 560px);
 }

@@ -735,3 +735,32 @@
   line-height: 1.6;
 }
 
+.home-contacts {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.home-contacts p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.home-contacts strong {
+  color: var(--if-green-dark);
+  font-weight: 700;
+}
+
+.home-contacts a {
+  color: var(--if-green-dark);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.home-contacts a:hover {
+  text-decoration: underline;
+}

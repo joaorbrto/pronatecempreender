@@ -1,6 +1,6 @@
 export const PAGE_COPY = {
   home: {
-    eyebrow: 'Pronatec Empreender',
+    eyebrow: 'Pronatec Empreendedor',
     title: 'Portal de acompanhamento das inscrições',
     description:
       'Uma entrada única para consulta pública, indicadores de gestão e leitura territorial das ofertas.',
@@ -11,15 +11,18 @@ export const PAGE_COPY = {
     description: 'Informe o CPF para consultar a pesquisa de interesse.',
   },
   dashboard: {
-    eyebrow: 'Gestão e políticas públicas',
-    title: 'Dashboard administrativo',
+    eyebrow: 'GESTÃO E POLÍTICAS PÚBLICAS',
+    title: 'DASHBOARD - MAPEAMENTO DO PERFIL DOS ALUNOS INTERESSADOS',
     description:
-      'Indicadores agregados para orientar ofertas, territórios, inclusão digital e inclusão produtiva.',
+      'Indicadores gerados a partir do formulário aplicado aos alunos interessados no programa Pronatec Empreendedor.',
+    sourceLabel: 'Acessar formulário base do dashboard',
+    sourceUrl:
+      'https://docs.google.com/forms/d/1CWQicVS-I10_HlPt9WVYCvRq3c8b-4BNoTth53cUhDw/edit?allow_large_form',
   },
   secondaryDashboard: {
-    eyebrow: 'Pronatec Empreender',
-    title: 'Institutos cadastrados no programa Pronatec Empreender',
+    eyebrow: 'PRONATEC EMPREENDEDOR',
+    title: 'INSTITUTOS OFERTANTES - PRONATEC EMPREENDEDOR',
     description:
-      'Indicadores para que a coordenação acompanhe o andamento do programa.',
+      'Dados oriundos de planilha de controle atualizada pelos coordenadores das ofertas. Dados atualizados em tempo real.',
   },
 };

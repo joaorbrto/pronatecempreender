@@ -13,6 +13,17 @@ export function SecondaryDashboardContent({ summary }) {
 
   const scheduleChart = charts.find((chart) => chart.id === 'starts-by-month');
   const otherCharts = charts.filter((chart) => chart.id !== 'starts-by-month');
+  const chartTitleOverrides = {
+  'Ofertas por região': 'Turmas iniciadas por região',
+  'Vagas por região': 'Vagas em turmas já iniciadas por região',
+  'Ranking de instituições por vagas': 'Ranking de instituições por vagas pactuadas',
+  'Campi por instituição': 'Quantidade de turmas por instituição',
+};
+
+const normalizedOtherCharts = otherCharts.map((chart) => ({
+  ...chart,
+  title: chartTitleOverrides[chart.title] || chart.title,
+}));
   const totalRecords = summary.totalRecords || summary.totalResponses || 0;
   const primaryMetric = firstItem(metrics);
   const secondaryMetric = metrics[1];
@@ -30,7 +41,7 @@ export function SecondaryDashboardContent({ summary }) {
       {scheduleChart ? (
         <section className="dashboard-feature-grid">
           <ScheduleColumnPanel
-            title={scheduleChart.title || 'Início das ofertas'}
+            title={'Início das ofertas por campi'}
             icon={BarChart3}
             items={scheduleChart.items || []}
             featured
@@ -39,9 +50,9 @@ export function SecondaryDashboardContent({ summary }) {
         </section>
       ) : null}
 
-      {otherCharts.length ? (
+      {normalizedOtherCharts.length ? (
         <section className="dashboard-grid">
-          {otherCharts.map((chart, index) => (
+          {normalizedOtherCharts.map((chart, index) => (
             <GenericChartPanel chart={chart} index={index} key={chart.id || chart.title || index} />
           ))}
         </section>
