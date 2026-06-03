@@ -1,7 +1,7 @@
 export const PAGE_COPY = {
   home: {
     eyebrow: 'Pronatec Empreendedor',
-    title: 'Portal de acompanhamento das inscrições',
+    title: 'Portal de informações e dados - Pronatec Empreender',
     description:
       'Uma entrada única para consulta pública, indicadores de gestão e leitura territorial das ofertas.',
   },

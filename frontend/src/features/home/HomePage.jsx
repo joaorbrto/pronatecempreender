@@ -47,7 +47,7 @@ export function HomePage({ onNavigate }) {
 
             <button className="secondary-action" type="button" onClick={() => onNavigate('dashboard')}>
               <LayoutDashboard size={18} aria-hidden="true" />
-              Acessar SETEC
+              Acessar Mapeamento de Alunos
             </button>
 
             <button className="secondary-action" type="button" onClick={() => onNavigate('secondaryDashboard')}>
