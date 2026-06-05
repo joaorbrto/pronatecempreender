@@ -1,20 +1,8 @@
 export const PROGRAM_METRICS = [
-  {
-    value: '2025',
-    label: 'ciclo de lançamento',
-  },
-  {
-    value: '27',
-    label: 'instituições contempladas',
-  },
-  {
-    value: '5.975',
-    label: 'vagas aprovadas',
-  },
-  {
-    value: 'R$ 13,8 mi',
-    label: 'orçamento do ciclo',
-  },
+  { value: '2025', label: 'CICLO DE LANÇAMENTO' },
+  { value: '30', label: 'INSTITUIÇÕES ACORDADAS' },
+  { value: '6.900', label: 'VAGAS ACORDADAS' },
+  { value: 'R$ 13,8 mi', label: 'ORÇAMENTO DO CICLO' },
 ];
 
 export const PROGRAM_OBJECTIVES = [
