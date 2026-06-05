@@ -43,13 +43,6 @@ export function DashboardContent({ summary }) {
         />
 
         <MetricCard
-          icon={MapPin}
-          label="Região com maior procura"
-          value={topRegion?.label || 'Sem dados'}
-          detail={topRegion ? `${formatNumber(topRegion.count)} inscrições` : ''}
-        />
-
-        <MetricCard
           icon={Gauge}
           label="Vagas acertadas / pactuadas"
           value={`${formatNumber(agreedVacancies)} / ${formatNumber(PACTUATED_VACANCIES)}`}
