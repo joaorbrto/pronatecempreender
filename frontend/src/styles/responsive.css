@@ -97,25 +97,50 @@
 }
 
 @media (max-width: 640px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .app-frame {
     width: 100%;
     max-width: 100vw;
+    display: block;
     overflow-x: hidden;
   }
 
   .sidebar,
-  .workspace {
+  .workspace,
+  .workspace-header,
+  .dashboard-content,
+  .dashboard-grid,
+  .dashboard-feature-grid,
+  .dashboard-grid.compact,
+  .metric-grid,
+  .insight-grid,
+  .panel,
+  .result-panel,
+  .chart-panel,
+  .metric-card,
+  .setup-panel {
     width: 100%;
-    max-width: 100vw;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .workspace {
     padding: 20px 16px 36px;
+    overflow-x: hidden;
   }
 
   .sidebar {
+    position: static;
     grid-template-columns: 1fr;
     gap: 10px;
+    padding: 18px 18px 16px;
   }
 
   .brand-text {
@@ -127,14 +152,24 @@
   .side-nav {
     grid-column: 1;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .side-nav button {
+    width: 100%;
+    min-width: 0;
   }
 
   .side-nav button span {
+    min-width: 0;
     font-size: 0.75rem;
+    overflow-wrap: anywhere;
   }
 
   h1 {
-    font-size: 1.55rem;
+    max-width: 100%;
+    font-size: clamp(1.55rem, 8vw, 2rem);
+    overflow-wrap: anywhere;
   }
 
   .workspace-header {
@@ -142,10 +177,21 @@
     padding-bottom: 18px;
   }
 
+  .workspace-header p {
+    max-width: 100%;
+  }
+
+  .workspace-source-link {
+    max-width: 100%;
+    flex-wrap: wrap;
+    overflow-wrap: anywhere;
+  }
+
   .panel,
   .result-panel,
   .chart-panel {
     padding: 18px;
+    overflow: hidden;
   }
 
   .home-hero {
@@ -165,16 +211,132 @@
     grid-template-columns: 1fr;
   }
 
-  .donut-wrap {
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .metric-card strong,
+  .metric-card span,
+  .metric-card p {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  .home-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .donut-wrap,
+  .looker-donut-layout,
+  .compact-pie-layout {
     grid-template-columns: 1fr;
     justify-items: center;
   }
 
-  .home-stats {
-    grid-template-columns: repeat(2, 1fr);
+  .donut-wrap,
+  .looker-donut-layout {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
 
-  .metric-grid {
+  .donut-chart,
+  .pie-chart,
+  .looker-donut-chart,
+  .donut-visual,
+  .pie-visual,
+  .looker-donut-visual {
+    width: min(100%, 260px);
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .donut-chart svg,
+  .pie-chart svg,
+  .looker-donut-chart svg,
+  .donut-visual svg,
+  .pie-visual svg,
+  .looker-donut-visual svg {
+    width: 100%;
+    height: auto;
+    max-width: 260px;
+  }
+
+  .donut-legend,
+  .looker-donut-legend,
+  .pie-legend {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .donut-legend li,
+  .looker-donut-legend li,
+  .pie-legend li {
+    min-width: 0;
+  }
+
+  .donut-legend span,
+  .looker-donut-legend span,
+  .pie-legend span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .setup-panel form,
+  .admin-panel form,
+  .form-panel form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .setup-panel .input-row,
+  .admin-panel .input-row,
+  .form-panel .input-row {
     grid-template-columns: 1fr;
+  }
+
+  .setup-panel input,
+  .admin-panel input,
+  .form-panel input {
+    width: 100%;
+    min-width: 0;
+  }
+
+    .input-row {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .input-row input,
+  .input-row button {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .metric-card {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .metric-card strong,
+  .metric-card span,
+  .metric-card p {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
   }
 }

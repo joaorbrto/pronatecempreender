@@ -79,3 +79,43 @@
   color: var(--if-green-dark);
   font-weight: 600;
 }
+
+@media (max-width: 640px) {
+  .donut-panel {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .donut-wrap {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    overflow: hidden;
+  }
+
+  .donut {
+    width: min(220px, 72vw);
+    height: min(220px, 72vw);
+    min-width: 0;
+  }
+
+  .donut-legend {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .donut-legend div {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .donut-legend span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}

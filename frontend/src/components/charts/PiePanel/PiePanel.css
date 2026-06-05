@@ -50,3 +50,43 @@
   color: var(--if-green-dark);
   font-weight: 600;
 }
+
+@media (max-width: 640px) {
+  .compact-pie-panel {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .compact-pie-layout {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    overflow: hidden;
+  }
+
+  .compact-pie {
+    width: min(220px, 72vw);
+    height: min(220px, 72vw);
+    min-width: 0;
+  }
+
+  .compact-pie-legend {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .compact-pie-legend div {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .compact-pie-legend span:nth-child(2) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}

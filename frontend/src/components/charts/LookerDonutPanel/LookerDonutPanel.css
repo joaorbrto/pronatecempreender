@@ -137,3 +137,43 @@
     display: none;
   }
 }
+@media (max-width: 640px) {
+  .looker-donut-panel {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .looker-donut-layout {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    overflow: hidden;
+  }
+
+  .looker-donut {
+    width: min(240px, 76vw);
+    height: min(240px, 76vw);
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .looker-legend {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .looker-legend div {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+  }
+
+  .looker-legend span:nth-child(2) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
