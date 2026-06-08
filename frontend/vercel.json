@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/empreender",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/empreender/:path*",
