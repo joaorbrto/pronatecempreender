@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/empreender/:path*",
+      "destination": "/:path*"
+    }
+  ]
+}
