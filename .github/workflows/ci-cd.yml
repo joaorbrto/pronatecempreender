@@ -1,0 +1,59 @@
+name: CI/CD - Pronatec Empreender
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-frontend:
+    name: Build do Frontend
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Gerar build
+        run: npm run build
+        env:
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
+          VITE_APPS_SCRIPT_URL: ${{ secrets.VITE_APPS_SCRIPT_URL }}
+          VITE_FORM_URL: ${{ secrets.VITE_FORM_URL }}
+          VITE_SECONDARY_APPS_SCRIPT_URL: ${{ secrets.VITE_SECONDARY_APPS_SCRIPT_URL }}
+
+  docker-build:
+    name: Build da Imagem Docker
+    runs-on: ubuntu-latest
+    needs: build-frontend
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Gerar imagem Docker
+        run: |
+          docker build \
+            --build-arg VITE_RECAPTCHA_SITE_KEY="${{ secrets.VITE_RECAPTCHA_SITE_KEY }}" \
+            --build-arg VITE_APPS_SCRIPT_URL="${{ secrets.VITE_APPS_SCRIPT_URL }}" \
+            --build-arg VITE_FORM_URL="${{ secrets.VITE_FORM_URL }}" \
+            --build-arg VITE_SECONDARY_APPS_SCRIPT_URL="${{ secrets.VITE_SECONDARY_APPS_SCRIPT_URL }}" \
+            -t pronatecempreender:latest .
